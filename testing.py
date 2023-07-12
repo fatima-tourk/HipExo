@@ -22,11 +22,18 @@ exo_list = hip_exo.connect_to_exos(IS_HARDWARE_CONNECTED,
     file_ID=file_ID, config=config, sync_detector=sync_detector, offline_data_left=offline_data_left, offline_data_right=offline_data_right)
 if IS_HARDWARE_CONNECTED:
     print('Battery Voltage: ', 0.001*exo_list[0].get_batt_voltage(), 'V')
+    for exo in exo_list:
+        print('Stand still to get hip zero position')
+        input('Press enter to start')
+        exo.hip_standing_calibration(config=config, max_seconds_to_calibrate= 2)
+        print('Hip zero position acquired!', config.HIP_ZERO_POSITION)
 config_saver = config_util.ConfigSaver(
     file_ID=file_ID, config=config)  # Saves config updates
 
 input('Press any key to begin')
 print('Start!')
+
+
 
 timer = util.FlexibleTimer(
     target_freq=config.TARGET_FREQ)  # attempts constants freq
@@ -67,8 +74,8 @@ while True:
             
             # Read and write exo data
             exo.read_data(loop_time=loop_time)
-            print('hip_angle: ', exo.data.motor_angle, 'temp: ', exo.data.temperature,
-                      'at time: ', loop_time)
+            hip_angle = exo.motor_angle_to_hip_angle(config=config)
+            print('motor angle', exo.data.motor_angle, 'hip_angle: ', hip_angle, 'at time: ', loop_time)
             exo.write_data()
 
     except KeyboardInterrupt:

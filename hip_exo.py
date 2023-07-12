@@ -138,8 +138,7 @@ class Exo():
                               k_val=0,
                               b_val=0,
                               ff=constants.DEFAULT_FF)
-            self.TR_from_hip_angle = interpolate.PchipInterpolator(
-                constants.HIP_PTS, self.motor_sign*constants.TR_PTS)
+            self.TR = 9
 
     @dataclass
     class DataContainer:
@@ -157,7 +156,6 @@ class Exo():
         motor_angle: int = 0
         motor_velocity: float = 0
         motor_current: int = 0
-        hip_zero_position: float = 0
         hip_angle: float = 0
         hip_velocity: float = 0
         hip_torque_from_current: float = 0
@@ -236,10 +234,10 @@ class Exo():
             # Check to see if values are reasonable
             hip_angle_temp = (1 * self.motor_sign * actpack_data.mot_ang *
                                 constants.ENC_CLICKS_TO_DEG)
-            if hip_angle_temp > constants.MAX_HIP_ANGLE or hip_angle_temp < constants.MIN_HIP_ANGLE:
+            '''if hip_angle_temp > constants.MAX_HIP_ANGLE or hip_angle_temp < constants.MIN_HIP_ANGLE:
                 print('Bad packet caught on side: ', self.side, 'hip_angle: ', hip_angle_temp,
                       'at time: ', self.data.state_time)
-                return  # Exit early
+                return  # Exit early'''
             self.data.hip_angle = hip_angle_temp
             self.data.state_time = actpack_data.state_time * constants.MS_TO_SECONDS
             self.data.temperature = actpack_data.temperature
@@ -452,25 +450,25 @@ class Exo():
         '''Converts current (mA) to torque (Nm), based on side and transmission ratio (no dynamics)'''
         motor_torque = current*constants.MOTOR_CURRENT_TO_MOTOR_TORQUE
         hip_torque = motor_torque * \
-            self.TR_from_hip_angle(self.data.hip_angle)
+            self.TR
         return hip_torque
 
     def _hip_torque_to_motor_current(self, torque: float) -> int:
         '''Converts torque (Nm) to current (mA), based on side and transmission ratio (no dynamics)'''
         motor_torque = torque / \
-            self.TR_from_hip_angle(self.data.hip_angle)
+            self.TR
         motor_current = int(
             motor_torque / constants.MOTOR_CURRENT_TO_MOTOR_TORQUE)
 
         return motor_current
 
-    def motor_angle_to_hip_angle(self, hip_zero_position):
+    def motor_angle_to_hip_angle(self, config: Type[config_util.ConfigurableConstants]):
         '''Calculate hip angle from motor angle.'''
-        if not self.has_calibrated:
+        if config.HIP_ZERO_POSITION==None:
             raise ValueError(
                 'Must perform standing calibration before performing this task')
         else:
-            hip_angle = (self.data.motor_angle-hip_zero_position)*constants.ENC_CLICKS_TO_DEG
+            hip_angle = (self.data.motor_angle-config.HIP_ZERO_POSITION)*constants.MOTOR_CLICKS_TO_DEG
         return hip_angle 
     
     def hip_angle_to_motor_angle(self):
@@ -479,10 +477,10 @@ class Exo():
             raise ValueError(
                 'Must perform standing calibration before performing this task')
         else:
-            motor_angle = (self.data.hip_angle)/constants.ENC_CLICKS_TO_DEG
+            motor_angle = (self.data.hip_angle)/constants.MOTOR_CLICKS_TO_DEG
         return motor_angle 
     
-    def hip_standing_calibration(self,
+    def hip_standing_calibration(self, config: Type[config_util.ConfigurableConstants],
                                 max_seconds_to_calibrate: float = 2):
         input(['Press Enter to calibrate exo on ' + str(self.side)])
         time.sleep(0.2)
@@ -495,7 +493,7 @@ class Exo():
             current_calibration_angle = self.angle_filter.filter(self.data.motor_angle)
             calibration_angles.append(current_calibration_angle)
         hip_zero_position = np.mean(calibration_angles)
-        self.hip_zero_position = hip_zero_position
+        config.HIP_ZERO_POSITION = hip_zero_position
     
     def standing_calibration_offline(self, past_motor_offset):
         '''Brings motor offset angles.'''

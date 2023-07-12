@@ -1,0 +1,2 @@
+[2023-07-12 17:35:18.914] [Debug2023-07-12_17h35m18s_1416_id_] [error] Received too many bytes (2132, limit is 1024), flushing serial port input
+[2023-07-12 17:35:21.423] [Debug2023-07-12_17h35m18s_1416_id_] [error] Queued up stop streaming command.

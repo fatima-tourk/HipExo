@@ -7,19 +7,6 @@ TARGET_FREQ = 200
 # EDIT THESE FOR GOOD HIP ANGLE RANGE
 MAX_HIP_ANGLE = 86  # 83  # degrees, plantarflexion
 MIN_HIP_ANGLE = -63  # -60  # degrees, dorsiflexion
-# These polynomials are derived from the calibration routine (calibrate.py), analyzed with transmission_analysis.py
-LEFT_ANKLE_TO_MOTOR = np.array(
-    [-8.92089947e-06, 6.54524084e-04, 9.47872779e-02, 5.97822436e-01,
-     -7.61045898e+02, 1.06551671e+04])
-# [-7.46848531e-06,  6.16855504e-04,  7.54072228e-02,  7.50135291e-01,
-#  -7.03196238e+02, -3.95156221e+04])
-RIGHT_ANKLE_TO_MOTOR = np.array(
-    [6.53412109e-06, -5.10000261e-04, -7.52460274e-02, -1.27584877e+00,
-     7.05016223e+02, -1.09811413e+04])
-# These points are used to create a Pchip spline, which defines the transmission ratio as a function of ankle angle
-# EDIT THESE FOR HIP SPLINE
-HIP_PTS = np.array([-60, -40, 0, 10, 20, 30, 40, 45.6, 55, 80])  # Deg
-TR_PTS = np.array([16, 16, 15, 14.5, 14, 11.5, 5, 0, -6.5, -12])  # Nm/Nm
 
 LEFT_ANKLE_ANGLE_OFFSET = -92  # deg
 RIGHT_ANKLE_ANGLE_OFFSET = 88  # deg
@@ -34,6 +21,8 @@ K_TO_NM_PER_DEGREE = 0  #
 B_TO_NM_PER_DEGREE_PER_S = 0
 
 ENC_CLICKS_TO_DEG = 1/(2**14/360)
+#[motor clicks → 16384 clicks per rotation] 
+MOTOR_CLICKS_TO_DEG = (360/16384)*0.1125
 # Getting the motor current to motor torque conversion is tricky, and any updates to
 # the firmware should confirm that Dephy has not changed their internal current units.
 # This constant assumes we are using q-axis current.
@@ -42,20 +31,15 @@ MOTOR_CURRENT_TO_MOTOR_TORQUE = 0.000146  # mA to Nm
 # Dephy units to deg/s --experimentally estimated because their numbers are wrong
 DEPHY_VEL_TO_MOTOR_VEL = 0.025*ENC_CLICKS_TO_DEG
 
-# ankle_torque ~ AVERAGE_TRANSMISSION_RATIO*motor_torque
-AVERAGE_TRANSMISSION_RATIO = 14  # Used to roughly map motor to ankle impedance
-
 # https://dephy.com/wiki/flexsea/doku.php?id=controlgains
 DEPHY_K_CONSTANT = 0.00078125
 DEPHY_B_CONSTANT = 0.0000625
 # Multiply Dephy's k_val by this to get a motor stiffness in Nm/deg
 DEPHY_K_TO_MOTOR_K = MOTOR_CURRENT_TO_MOTOR_TORQUE / (ENC_CLICKS_TO_DEG *
                                                       DEPHY_K_CONSTANT)
-# Multiply Dephy's k_val by this to get an estimate of ankle stiffness in Nm/deg
-DEPHY_K_TO_ANKLE_K = AVERAGE_TRANSMISSION_RATIO**2 * DEPHY_K_TO_MOTOR_K
 
 # Multiply Dephy's k_val by this to get an estimate of hip stiffness in Nm/deg
-DEPHY_K_TO_HIP_K = AVERAGE_TRANSMISSION_RATIO**2 * DEPHY_K_TO_MOTOR_K
+DEPHY_K_TO_HIP_K = 9**2 * DEPHY_K_TO_MOTOR_K
 
 # Inferred from https://invensense.tdk.com/products/motion-tracking/6-axis/mpu-6050/
 ACCEL_GAIN = 1 / 8192  # LSB -> gs
@@ -72,10 +56,6 @@ DEFAULT_KI = 400
 DEFAULT_KD = 0
 # Feedforward term. "0 is 0% and 128 (possibly unstable!) is 100%."
 DEFAULT_FF = 120  # 126
-DEFAULT_SWING_KP = 150
-DEFAULT_SWING_KI = 50
-DEFAULT_SWING_KD = 0
-DEFAULT_SWING_FF = 0
 
 # TODO(maxshep) raise these when it seems safe
 MAX_ALLOWABLE_VOLTAGE_COMMAND = 3000  # mV
