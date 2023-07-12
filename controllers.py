@@ -212,7 +212,7 @@ class FourPointSplineController(GenericSplineController):
         if self.peak_hold_time > 0:
             return [0, rise_fraction, peak_fraction, peak_fraction+self.peak_hold_time, fall_fraction, 1]
         else:
-            return [0, rise_fraction, peak_fraction, fall_fraction, 10]
+            return [0, rise_fraction, peak_fraction, fall_fraction, 1]
 
     def _get_spline_y(self, peak_torque) -> list:
         if self.peak_hold_time > 0:
@@ -220,6 +220,56 @@ class FourPointSplineController(GenericSplineController):
         else:
             return [self.bias_torque, self.bias_torque, peak_torque, self.bias_torque, self.bias_torque]
 
+class HipSplineController(GenericSplineController):
+    def __init__(self,
+                 exo: Exo,
+                 min_fraction: float = 0.12,
+                 first_zero: float = 0.37,
+                 peak_fraction: float = 0.66,
+                 second_zero: float = 0.9,
+                 Kp: int = constants.DEFAULT_KP,
+                 Ki: int = constants.DEFAULT_KI,
+                 Kd: int = constants.DEFAULT_KD,
+                 ff: int = constants.DEFAULT_FF,
+                 fade_duration: float = 5,
+                 bias_torque: float = 5,
+                 start_torque: float = -1.5,
+                 extension_min_torque: float = -4,
+                 flexion_max_torque: float = 2.5,
+                 use_gait_phase: bool = True,
+                 peak_hold_time: float = 0):
+        '''Inherits from GenericSplineController, and adds a update_spline_with_list function.'''
+        self.peak_hold_time = peak_hold_time  # can be used to hold a peak
+        self.bias_torque = bias_torque
+        super().__init__(exo=exo,
+                         spline_x=self._get_spline_x(
+                             min_fraction,first_zero,peak_fraction,second_zero),
+                         spline_y=self._get_spline_y(start_torque, extension_min_torque, flexion_max_torque),
+                         Kp=Kp, Ki=Ki, Kd=Kd, ff=ff,
+                         fade_duration=fade_duration,
+                         use_gait_phase=use_gait_phase)
+
+    def update_ctrl_params_from_config(self, config: Type[config_util.ConfigurableConstants]):
+        'Updates controller parameters from the config object.'''
+        super().update_spline(spline_x=self._get_spline_x(min_fraction=config.MIN_FRACTION,
+                                                          peak_fraction=config.PEAK_FRACTION,
+                                                          first_zero=config.FIRST_ZERO,
+                                                          second_zero=config.SECOND_ZERO),
+                              spline_y=self._get_spline_y(start_torque=config.START_TORQUE,
+                                                          extension_min_torque=config.EXTENSION_MIN_TORQUE,
+                                                          flexion_max_torque=config.FLEXION_MAX_TORQUE))
+
+    def _get_spline_x(self, min_fraction, first_zero, peak_fraction, second_zero) -> list:
+        if self.peak_hold_time > 0:
+            return [0, min_fraction, min_fraction+self.peak_hold_time, first_zero, peak_fraction, peak_fraction+self.peak_hold_time, second_zero, 1]
+        else:
+            return [0, min_fraction, first_zero, peak_fraction, second_zero, 1]
+
+    def _get_spline_y(self, start_torque, extension_min_torque, flexion_max_torque) -> list:
+        if self.peak_hold_time > 0:
+            return [start_torque, extension_min_torque, extension_min_torque, self.bias_torque, flexion_max_torque, flexion_max_torque, self.bias_torque, start_torque]
+        else:
+            return [start_torque, extension_min_torque, self.bias_torque, flexion_max_torque, self.bias_torque, start_torque]
 
 class GenericImpedanceController(Controller):
     def __init__(self,

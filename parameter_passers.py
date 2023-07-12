@@ -52,8 +52,8 @@ class ParameterPasser(threading.Thread):
 
                 if first_letter == 'v':
                     param_list = [float(x) for x in msg_content.split(',')]
-                    if len(param_list) != 4:
-                        print('Must send four spline points with v<>! message')
+                    if len(param_list) != 6:
+                        print('Must send six spline points with v<>! message')
                     else:
                         self.config.RISE_FRACTION = param_list[0]
                         self.config.PEAK_TORQUE = param_list[1]

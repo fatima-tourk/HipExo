@@ -43,17 +43,23 @@ def connect_to_exos(IS_HARDWARE_CONNECTED,file_ID: str,
 
     exo_list = []
     count = 0
+    print('Hardware connected: ', IS_HARDWARE_CONNECTED)
     for port in ports:
         try:
             if IS_HARDWARE_CONNECTED:
+                print(IS_HARDWARE_CONNECTED)
                 dev_id = fxs.open(port, baud_rate, log_level=3)
+                print(dev_id)
                 fxs.start_streaming(
                     dev_id=dev_id, freq=config.ACTPACK_FREQ, log_en=config.DO_DEPHY_LOG)
+                print(config.ACTPACK_FREQ)
+                print(config.DO_DEPHY_LOG)
                 exo_list.append(Exo(IS_HARDWARE_CONNECTED,dev_id=dev_id, file_ID=file_ID,
                                     target_freq=config.TARGET_FREQ,
                                     max_allowable_current=config.MAX_ALLOWABLE_CURRENT,
                                     do_include_gen_vars=config.DO_INCLUDE_GEN_VARS,
                                     sync_detector=sync_detector))
+                print('exo',exo_list)
                 print('connected port: ', port)
             else:
                 port_numbers = [4321, 1234]
@@ -228,7 +234,7 @@ class Exo():
         if self.IS_HARDWARE_CONNECTED:
             actpack_data = fxs.read_device(self.dev_id)
             # Check to see if values are reasonable
-            hip_angle_temp = (1 * self.motor_sign * actpack_data.hip_ang *
+            hip_angle_temp = (1 * self.motor_sign * actpack_data.mot_ang *
                                 constants.ENC_CLICKS_TO_DEG)
             if hip_angle_temp > constants.MAX_HIP_ANGLE or hip_angle_temp < constants.MIN_HIP_ANGLE:
                 print('Bad packet caught on side: ', self.side, 'hip_angle: ', hip_angle_temp,
@@ -253,7 +259,6 @@ class Exo():
             self.data.motor_current = actpack_data.mot_cur
             self.data.hip_torque_from_current = self._motor_current_to_hip_torque(
                 self.data.motor_current)
-            self.data.status_ex = actpack_data.status_ex
 
         else:
             hip_ang = self.actpack_data['hip_angle'][iteration_count]
@@ -278,12 +283,6 @@ class Exo():
             self.data.gait_phase = self.actpack_data['gait_phase'][iteration_count]
             self.data.did_toe_off = self.actpack_data['did_toe_off'][iteration_count]
             self.data.temperature = self.actpack_data['temperature'][iteration_count]
-            try:
-                self.data.status_ex = self.actpack_data['status_ex'][iteration_count]
-                self.data.status_mn = self.actpack_data['status_mn'][iteration_count]
-                self.data.status_re = self.actpack_data['status_re'][iteration_count]
-            except:
-                pass
 
         # self.data.gen_var4 = iteration_count
 
@@ -327,30 +326,9 @@ class Exo():
             self._did_heel_strike_hold = False
             self._did_toe_off_hold = False
 
-    def write_data(self, only_write_if_new: bool = False):
-        '''Writes data file, optionally only if there is new actpack data.'''
-        if self.file_ID is not None and only_write_if_new:
-            # This logic is messy because is_heel_strike and is_toe_off are calculated more frequently,
-            # So to write them we need to store if they occurred.
-            if self.data.did_heel_strike:
-                self._did_heel_strike_hold = True
-            if self.data.did_toe_off:
-                self._did_toe_off_hold = True
-            if self.last_state_time != self.data.state_time:
-                # Temporarily replace did_heel_strike and did_toe_off with holds
-                current_did_heel_strike = self.data.did_heel_strike
-                current_did_toe_off = self.data.did_toe_off
-                self.data.did_heel_strike = self._did_heel_strike_hold
-                self.data.did_toe_off = self._did_toe_off_hold
-                self.writer.writerow(self.data.__dict__)
-                # Reset to False (will fail if heel strikes / toe offs occur within ~10 ms of each other.)
-                self.data.did_heel_strike = current_did_heel_strike
-                self._did_heel_strike_hold = False
-                self.data.did_toe_off = current_did_toe_off
-                self._did_toe_off_hold = False
-        else:
-            if self.file_ID is not None:
-                self.writer.writerow(self.data.__dict__)
+    def write_data(self):
+        if self.file_ID is not None:
+            self.writer.writerow(self.data.__dict__)
 
     def close_file(self):
         if self.file_ID is not None:
@@ -505,7 +483,7 @@ class Exo():
         return motor_angle 
     
     def hip_standing_calibration(self,
-                                max_seconds_to_calibrate: float = 5):
+                                max_seconds_to_calibrate: float = 2):
         input(['Press Enter to calibrate exo on ' + str(self.side)])
         time.sleep(0.2)
         print('Calibrating...')
@@ -517,7 +495,7 @@ class Exo():
             current_calibration_angle = self.angle_filter.filter(self.data.motor_angle)
             calibration_angles.append(current_calibration_angle)
         hip_zero_position = np.mean(calibration_angles)
-        return hip_zero_position
+        self.hip_zero_position = hip_zero_position
     
     def standing_calibration_offline(self, past_motor_offset):
         '''Brings motor offset angles.'''

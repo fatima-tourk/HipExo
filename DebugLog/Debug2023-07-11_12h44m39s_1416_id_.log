@@ -1,0 +1,2 @@
+[2023-07-11 12:45:15.362] [Debug2023-07-11_12h44m39s_1416_id_] [error] Failed to send full command to serial port, only wrote 0 bytes
+[2023-07-11 12:45:15.512] [Debug2023-07-11_12h44m39s_1416_id_] [error] Queued up stop streaming command.

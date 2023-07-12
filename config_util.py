@@ -12,18 +12,8 @@ import constants
 class Task(Enum):
     '''Used to determine gait_event_detector used and state machines used.'''
     WALKING = 0
-    STANDINGPERTURBATION = 1
     WALKINGMLGAITPHASE = 4
 
-
-class StanceCtrlStyle(Enum):
-    '''Used to determine behavior during stance.'''
-    FOURPOINTSPLINE = 0
-    GENERICSPLINE = 1
-    SAWICKIWICKI = 2
-    GENERICIMPEDANCE = 3
-    FIVEPOINTSPLINE = 4
-    VIRTUALNEUROMUSCULARCONTROLLER = 5
 
 
 @dataclass
@@ -42,15 +32,15 @@ class ConfigurableConstants():
     RIGHT_STANDING_ANGLE: float = None  # Deg
     HIP_LEFT_STANDING_ANGLE: float = None # Deg
     HIP_RIGHT_STANDING_ANGLE: float = None # Deg
+    HIP_ZERO_POSITION: float = None
 
     TARGET_FREQ: float = 175  # Hz
     ACTPACK_FREQ: float = 200  # Hz
-    DO_DEPHY_LOG: bool = False
+    DO_DEPHY_LOG: bool = True
     DEPHY_LOG_LEVEL: int = 4
     ONLY_LOG_IF_NEW: bool = True
 
     TASK: Type[Task] = Task.WALKING
-    STANCE_CONTROL_STYLE: Type[StanceCtrlStyle] = StanceCtrlStyle.FOURPOINTSPLINE
     MAX_ALLOWABLE_CURRENT = 20000  # mA
 
     # Gait State details
@@ -74,6 +64,16 @@ class ConfigurableConstants():
     FALL_FRACTION: float = 0.641
     PEAK_TORQUE: float = 30
     SPLINE_BIAS: float = 3  # Nm
+
+    # Hip Spline
+    MIN_FRACTION: float = 0.12
+    FIRST_ZERO: float = 0.37
+    PEAK_FRACTION: float = 0.66
+    SECOND_ZERO: float = 0.90
+
+    START_TORQUE: float = -1.5
+    FLEXION_MAX_TORQUE: float = 2.5
+    EXTENSION_MIN_TORQUE: float = -4
 
     # Impedance
     K_VAL: int = 500

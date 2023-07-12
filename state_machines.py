@@ -123,3 +123,27 @@ class StanceSwingStateMachine(HighLevelController):
         if self.swing_only != config.SWING_ONLY:
             self.swing_only = config.SWING_ONLY
             print('Updated swing only to: ', self.swing_only)
+
+class OneStateMachine(HighLevelController):
+    '''Unilateral state machine that takes in data, segments strides, and applies controllers'''
+
+    def __init__(self,
+                 exo: Type[Exo],
+                 phase_controller: Type[controllers.Controller]
+                 ):
+        '''A state machine object is associated with an exo, and reads/stores exo data, applies logic to
+        determine gait states and phases, chooses the correct controllers, and applies the
+        controller.'''
+        self.exo = exo
+        self.phase_controller = phase_controller
+        self.controller_now = self.phase_controller
+
+    def step(self, read_only=False):
+        self.controller_now = self.phase_controller
+        did_controllers_switch = False
+
+        if not read_only:
+            self.controller_now.command(reset=did_controllers_switch)
+
+    def update_ctrl_params_from_config(self, config):
+        self.phase_controller.update_ctrl_params_from_config(config=config)

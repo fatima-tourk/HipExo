@@ -20,9 +20,11 @@ import offline_testing_file
 import pandas as pd
 
 
-config, offline_test_time_duration, past_data_file_names = config_util.load_config_from_args()   # loads config from passed args
+#config, offline_test_time_duration, past_data_file_names = config_util.load_config_from_args()   # loads config from passed args
+config, offline_test_time_duration= config_util.load_config(config_filename ='test_config.py', offline_value=None, hardware_connected='True')
 
 IS_HARDWARE_CONNECTED = config.IS_HARDWARE_CONNECTED
+print('Hardware connected: ', IS_HARDWARE_CONNECTED)
 offline_data_left, offline_data_right = None, None
 if not IS_HARDWARE_CONNECTED:
     offline_data_left, offline_data_right = offline_testing_file.get_offline_past_data_files(config.IS_HARDWARE_CONNECTED, past_data_file_names, offline_test_time_duration)
@@ -96,7 +98,6 @@ keyboard_thread = parameter_passers.ParameterPasser(
     lock=lock, config=config, quit_event=quit_event,
     new_params_event=new_params_event)
 config_saver.write_data(loop_time=0)  # Write first row on config
-only_write_if_new = not config.READ_ONLY and config.ONLY_LOG_IF_NEW
 
 iteration_count=0
 while True:
@@ -132,19 +133,18 @@ while True:
             else:
                 exo.read_data(loop_time=loop_time)
 
-            
-        if iteration_count >= length:
-            # Reached the end of the document, break out of the main loop
-            break
+        if not IS_HARDWARE_CONNECTED:    
+            if iteration_count >= length:
+                # Reached the end of the document, break out of the main loop
+                break
         
         for gait_state_estimator in gait_state_estimator_list:
             gait_state_estimator.detect()
-            print(exo.data.gait_phase)
         if not config.READ_ONLY:
             for state_machine in state_machine_list:
                 state_machine.step(read_only=config.READ_ONLY)
         for exo in exo_list:
-            exo.write_data(only_write_if_new=only_write_if_new)
+            exo.write_data()
 
     except KeyboardInterrupt:
         print('Ctrl-C detected, Exiting Gracefully')

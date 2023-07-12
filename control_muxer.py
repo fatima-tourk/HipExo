@@ -33,4 +33,12 @@ def get_gse_and_sm_lists(exo_list, config: Type[config_util.ConfigurableConstant
                 toe_off_detector=toe_off_detector,
                 do_print_toe_offs=config.PRINT_TO)
             gait_state_estimator_list.append(gait_state_estimator)
+
+            # Define State Machine
+            phase_controller = controllers.HipSplineController(
+                exo=exo, min_fraction=config.MIN_FRACTION, first_zero=config.FIRST_ZERO, peak_fraction=config.PEAK_FRACTION,
+                second_zero=config.SECOND_ZERO, start_torque=config.START_TORQUE, extension_min_torque=config.EXTENSION_MIN_TORQUE,
+                flexion_max_torque=config.FLEXION_MAX_TORQUE)
+            state_machine = state_machines.OneStateMachine(exo=exo, phase_controller=phase_controller)
+            state_machine_list.append(state_machine)
     return gait_state_estimator_list, state_machine_list

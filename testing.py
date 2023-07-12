@@ -5,7 +5,7 @@ import time
 import parameter_passers
 import threading
 
-config, offline_test_time_duration, past_data_file_names = config_util.load_config_from_args()   # loads config from passed args
+config, offline_test_time_duration= config_util.load_config(config_filename ='test_config.py', offline_value=None, hardware_connected='True')
 
 IS_HARDWARE_CONNECTED = config.IS_HARDWARE_CONNECTED
 print('hardware connected: ',IS_HARDWARE_CONNECTED)
@@ -32,11 +32,10 @@ timer = util.FlexibleTimer(
     target_freq=config.TARGET_FREQ)  # attempts constants freq
 t0 = time.perf_counter()
 config_saver.write_data(loop_time=0)  # Write first row on config
-only_write_if_new = not config.READ_ONLY and config.ONLY_LOG_IF_NEW
 
 #Select controller
 print('What controller would you like to use?')
-print('1: current \n 2: voltage \n 3: motor angle \n 4: impedance \n 5: torque')
+print('0: no controller \n 1: current \n 2: voltage \n 3: motor angle \n 4: impedance \n 5: torque')
 controller = int(input('Enter the number of the controller you would like to use'))
 while True:
     try:
@@ -44,8 +43,11 @@ while True:
         loop_time = time.perf_counter() - t0
 
         for exo in exo_list:
+            print()
             # Enter input values for chosen controller
-            if controller==1:
+            if controller==0:
+                print('no controller selected, reading data only')
+            elif controller==1:
                 desired_mA = int(input('Enter desired current in mA'))
                 exo.command_current(desired_mA=desired_mA)
             elif controller==2:
@@ -65,7 +67,9 @@ while True:
             
             # Read and write exo data
             exo.read_data(loop_time=loop_time)
-            exo.write_data(only_write_if_new=only_write_if_new)
+            print('hip_angle: ', exo.data.motor_angle, 'temp: ', exo.data.temperature,
+                      'at time: ', loop_time)
+            exo.write_data()
 
     except KeyboardInterrupt:
         print('Ctrl-C detected, Exiting Gracefully')
