@@ -5,7 +5,7 @@ import sys
 import time
 import warnings
 from dataclasses import dataclass, field, InitVar
-from scipy import interpolate
+#from scipy import interpolate
 from typing import Type
 import numpy as np
 import pandas as pd
