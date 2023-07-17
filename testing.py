@@ -76,6 +76,7 @@ while True:
             exo.read_data(loop_time=loop_time)
             hip_angle = exo.motor_angle_to_hip_angle(config=config)
             print('motor angle', exo.data.motor_angle, 'hip_angle: ', hip_angle, 'at time: ', loop_time)
+            print('hip angle table', exo.data.hip_angle)
             exo.write_data()
 
     except KeyboardInterrupt:

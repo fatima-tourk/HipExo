@@ -469,6 +469,7 @@ class Exo():
                 'Must perform standing calibration before performing this task')
         else:
             hip_angle = (self.motor_sign)*(self.data.motor_angle-config.HIP_ZERO_POSITION)*constants.MOTOR_CLICKS_TO_DEG
+            self.data.hip_angle = hip_angle
         return hip_angle 
     
     def hip_angle_to_motor_angle(self):
