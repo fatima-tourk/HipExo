@@ -232,8 +232,8 @@ class Exo():
         if self.IS_HARDWARE_CONNECTED:
             actpack_data = fxs.read_device(self.dev_id)
             # Check to see if values are reasonable
-            hip_angle_temp = (1 * self.motor_sign * actpack_data.mot_ang *
-                                constants.ENC_CLICKS_TO_DEG)
+            hip_angle_temp = (self.motor_sign * actpack_data.mot_ang *
+                                constants.MOTOR_CLICKS_TO_DEG)
             '''if hip_angle_temp > constants.MAX_HIP_ANGLE or hip_angle_temp < constants.MIN_HIP_ANGLE:
                 print('Bad packet caught on side: ', self.side, 'hip_angle: ', hip_angle_temp,
                       'at time: ', self.data.state_time)
