@@ -22,7 +22,7 @@ B_TO_NM_PER_DEGREE_PER_S = 0
 
 ENC_CLICKS_TO_DEG = 1/(2**14/360)
 #[motor clicks → 16384 clicks per rotation] 
-MOTOR_CLICKS_TO_DEG = (3.60/16384)*0.1125
+MOTOR_CLICKS_TO_DEG = (360/16384)*0.1125
 # Getting the motor current to motor torque conversion is tricky, and any updates to
 # the firmware should confirm that Dephy has not changed their internal current units.
 # This constant assumes we are using q-axis current.
