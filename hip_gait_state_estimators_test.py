@@ -6,6 +6,7 @@ from hip_exo import Exo
 import filters
 import hip_angle_spline
 import time
+import pandas as pd
 
 
 class HipTestGaitEventDetectors(unittest.TestCase):
@@ -31,7 +32,12 @@ class HipTestGaitEventDetectors(unittest.TestCase):
         time_nows = 1/sampling_freq * np.arange(0, 1300)
         #time_nows = np.arange(1, 1001)
         # about 1 heel strike per second
-        angle_values = hip_angle_spline.generate_hip_angle()
+        #angle_values = hip_angle_spline.generate_hip_angle()
+        
+        # Read angle values from Excel file
+        df = pd.read_excel('your_file.xlsx')
+        angle_values = df['hip_angle'].tolist()
+
         hip_toe_off_detector = hip_gait_state_estimators.HipToeOffDetector(
             maximum_angle=10, angle_filter=filters.Butterworth(N=2, Wn=0.4))
         gait_phase_estimator = hip_gait_state_estimators.StrideAverageGaitPhaseEstimator(
