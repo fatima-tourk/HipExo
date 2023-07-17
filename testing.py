@@ -72,10 +72,9 @@ while True:
         lock.release()
 
         for exo in exo_list:
-            print()
-            # Enter input values for chosen controller
             if controller==0:
-                print('no controller selected, reading data only')
+                pass
+                #print('no controller selected, reading data only')
             elif controller==1:
                 desired_mA = int(input('Enter desired current in mA'))
                 exo.command_current(desired_mA=desired_mA)
@@ -97,8 +96,8 @@ while True:
             # Read and write exo data
             exo.read_data(loop_time=loop_time)
             hip_angle = exo.motor_angle_to_hip_angle(config=config)
-            print('motor angle', exo.data.motor_angle, 'hip_angle: ', hip_angle, 'at time: ', loop_time)
-            print('hip angle table', exo.data.hip_angle)
+            #print('motor angle', exo.data.motor_angle, 'hip_angle: ', hip_angle, 'at time: ', loop_time)
+            #print('hip angle table', exo.data.hip_angle)
 
         for gait_state_estimator in gait_state_estimator_list:
             gait_state_estimator.detect()
