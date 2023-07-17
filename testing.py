@@ -4,6 +4,7 @@ import util
 import time
 import parameter_passers
 import threading
+import control_muxer
 
 config, offline_test_time_duration= config_util.load_config(config_filename ='test_config.py', offline_value=None, hardware_connected='True')
 
@@ -29,6 +30,15 @@ if IS_HARDWARE_CONNECTED:
         print('Hip zero position acquired!', config.HIP_ZERO_POSITION)
 config_saver = config_util.ConfigSaver(
     file_ID=file_ID, config=config)  # Saves config updates
+'''Instantiate gait_state_estimator and state_machine objects, store in lists.'''
+gait_state_estimator_list, state_machine_list = control_muxer.get_gse_and_sm_lists(
+    exo_list=exo_list, config=config)
+
+'''Prep parameter passing.'''
+lock = threading.Lock()
+quit_event = threading.Event()
+new_params_event = threading.Event()
+# v0.2,15,0.56,0.6!
 
 input('Press any key to begin')
 print('Start!')
@@ -48,6 +58,18 @@ while True:
     try:
         timer.pause()
         loop_time = time.perf_counter() - t0
+
+        lock.acquire()
+        if new_params_event.is_set():
+            config_saver.write_data(loop_time=loop_time)  # Update config file
+            for state_machine in state_machine_list:  # Make sure up to date
+                state_machine.update_ctrl_params_from_config(config=config)
+            for gait_state_estimator in gait_state_estimator_list:  # Make sure up to date
+                gait_state_estimator.update_params_from_config(config=config)
+            new_params_event.clear()
+        if quit_event.is_set():  # If user enters "quit"
+            break
+        lock.release()
 
         for exo in exo_list:
             print()
@@ -77,6 +99,14 @@ while True:
             hip_angle = exo.motor_angle_to_hip_angle(config=config)
             print('motor angle', exo.data.motor_angle, 'hip_angle: ', hip_angle, 'at time: ', loop_time)
             print('hip angle table', exo.data.hip_angle)
+
+        for gait_state_estimator in gait_state_estimator_list:
+            gait_state_estimator.detect()
+        if not config.READ_ONLY:
+            for state_machine in state_machine_list:
+                state_machine.step(read_only=config.READ_ONLY)
+
+        for exo in exo_list:
             exo.write_data()
 
     except KeyboardInterrupt:
