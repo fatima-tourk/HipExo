@@ -15,7 +15,7 @@ class HipTestGaitEventDetectors(unittest.TestCase):
         data = Exo.DataContainer()
         angle_signal = [0, 0, 0, 5, 3, 1, 2, 3, 0, 0, 0]
         toe_off_detector = hip_gait_state_estimators.HipToeOffDetector(
-            maximum_angle=10, angle_filter=filters.Butterworth(N=2, Wn=0.4), delay=0)
+            maximum_angle=-15, angle_filter=filters.Butterworth(N=2, Wn=0.4), delay=0)
         did_toe_offs = []
         for angle_val in angle_signal:
             data.hip_angle = angle_val
@@ -28,18 +28,17 @@ class HipTestGaitEventDetectors(unittest.TestCase):
          toe off detector, gait phase estimator. Requires looking at the plot to
          confirm.'''
         data = Exo.DataContainer()
-        sampling_freq = 100
-        time_nows = 1/sampling_freq * np.arange(0, 1300)
-        #time_nows = np.arange(1, 1001)
+        #sampling_freq = 100
+        #time_nows = 1/sampling_freq * np.arange(0, 7000)
         # about 1 heel strike per second
         #angle_values = hip_angle_spline.generate_hip_angle()
         
         # Read angle values from Excel file
-        df = pd.read_excel('your_file.xlsx')
+        df = pd.read_csv('C:/Users/ft700/Documents/Shepherd Lab/Hip Exo Code/Exoboot_Code/HipExo/exo_data/20230717_1455_walking 7_LEFT.csv')
         angle_values = df['hip_angle'].tolist()
 
         hip_toe_off_detector = hip_gait_state_estimators.HipToeOffDetector(
-            maximum_angle=10, angle_filter=filters.Butterworth(N=2, Wn=0.4))
+            maximum_angle=-3, angle_filter=filters.Butterworth(N=2, Wn=0.1))
         gait_phase_estimator = hip_gait_state_estimators.StrideAverageGaitPhaseEstimator(
             num_strides_required=2, min_allowable_stride_duration=0.4, max_allowable_stride_duration=1)
         hip_heel_strike_detector = hip_gait_state_estimators.GaitPhaseBasedHipHeelStrikeDetector(
@@ -52,18 +51,25 @@ class HipTestGaitEventDetectors(unittest.TestCase):
         did_heel_strikes = []
         gait_phases = []
         did_toe_offs = []
-        for time_now, angle_value in zip(time_nows, angle_values):
-            data.hip_angle = angle_value
+        filtered_angles = []
+
+        # Create a Butterworth filter object
+        butterworth_filter = filters.Butterworth(N=2, Wn=0.1)
+
+        for angle_value in angle_values:
+            data.hip_angle = -1*angle_value
             gait_event_detector.detect()
             did_toe_offs.append(data.did_toe_off)
             gait_phases.append(data.gait_phase)
             did_heel_strikes.append(data.did_heel_strike)
+            filtered_angles.append(butterworth_filter.filter(data.hip_angle))
             time.sleep(0.005)
         #print('gait phases: ',gait_phases)
         plt.plot(did_toe_offs, label='toe off')
         plt.plot(did_heel_strikes, label="heel strike")
         plt.plot(gait_phases, label='gait phase', linestyle='--')
-        plt.plot(angle_values, label='angle')
+        #plt.plot(angle_values, label='angle')
+        plt.plot(filtered_angles, label='filtered angles')
         plt.legend()
         plt.show()
 

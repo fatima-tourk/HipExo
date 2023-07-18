@@ -19,7 +19,7 @@ class PassThroughFilter(Filter):
         return new_val
 
 
-class Butterworth():
+class Butterworth(Filter):
     '''Implements a real-time Butterworth filter using second orded cascaded filters.'''
 
     def __init__(self, N: int, Wn: float, btype='low', fs=None):

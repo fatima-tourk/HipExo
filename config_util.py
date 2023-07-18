@@ -46,13 +46,13 @@ class ConfigurableConstants():
     # Gait State details
     HS_ANGLE_THRESHOLD: float = 100
     HS_ANGLE_FILTER_N: int = 2
-    HS_ANGLE_FILTER_WN: float = 3
+    HS_ANGLE_FILTER_WN: float = 0.1
     HS_ANGLE_DELAY: float = 0.05
     TOE_OFF_FRACTION: float = 0.60
     HEEL_STRIKE_FRACTION: float = 0.40
     NUM_STRIDES_REQUIRED: int = 2
     SWING_ONLY: bool = False
-    MAXIMUM_ANGLE: float = 10
+    MAXIMUM_ANGLE: float = -1
 
     # 4 point Spline
     # RISE_FRACTION: float = 0.2

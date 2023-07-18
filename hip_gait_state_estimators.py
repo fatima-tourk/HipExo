@@ -50,11 +50,14 @@ class HipToeOffDetector():
         self.timer = util.DelayTimer(delay_time=self.delay)
 
     def detect(self, data: Type[hip_exo.Exo.DataContainer]):
-        self.angle_history.appendleft(data.hip_angle)
+        self.angle_history.appendleft(self.angle_filter.filter(data.hip_angle))
+
         if (self.angle_history[1] < self.maximum_angle and
             self.angle_history[1] < self.angle_history[0] and
                 self.angle_history[1] < self.angle_history[2]):
             self.timer.start()
+            print('Toe Off detected')
+            print(self.angle_history)
         if self.timer.check():
             self.timer.reset()
             return True
