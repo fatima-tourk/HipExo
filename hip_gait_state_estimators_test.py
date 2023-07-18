@@ -34,7 +34,8 @@ class HipTestGaitEventDetectors(unittest.TestCase):
         #angle_values = hip_angle_spline.generate_hip_angle()
         
         # Read angle values from Excel file
-        df = pd.read_csv('C:/Users/ft700/Documents/Shepherd Lab/Hip Exo Code/Exoboot_Code/HipExo/exo_data/20230717_1455_walking 7_LEFT.csv')
+        #df = pd.read_csv('C:/Users/ft700/Documents/Shepherd Lab/Hip Exo Code/Exoboot_Code/HipExo/exo_data/20230717_1455_walking 7_LEFT.csv')
+        df = pd.read_csv('C:/Users/ft700/Documents/Shepherd Lab/Hip Exo Code/Exoboot_Code/HipExo/exo_data/20230718_1732_extended walking 2_LEFT.csv')
         angle_values = df['hip_angle'].tolist()
 
         hip_toe_off_detector = hip_gait_state_estimators.HipToeOffDetector(
