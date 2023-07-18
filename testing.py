@@ -9,7 +9,7 @@ import control_muxer
 config, offline_test_time_duration= config_util.load_config(config_filename ='test_config.py', offline_value=None, hardware_connected='True')
 
 IS_HARDWARE_CONNECTED = config.IS_HARDWARE_CONNECTED
-print('hardware connected: ',IS_HARDWARE_CONNECTED)
+#print('hardware connected: ',IS_HARDWARE_CONNECTED)
 offline_data_left, offline_data_right = None, None
 
 file_ID = input(
@@ -24,8 +24,6 @@ exo_list = hip_exo.connect_to_exos(IS_HARDWARE_CONNECTED,
 if IS_HARDWARE_CONNECTED:
     print('Battery Voltage: ', 0.001*exo_list[0].get_batt_voltage(), 'V')
     for exo in exo_list:
-        print('Stand still to get hip zero position')
-        input('Press enter to start')
         exo.hip_standing_calibration(config=config, max_seconds_to_calibrate= 2)
         print('Hip zero position acquired!', config.HIP_ZERO_POSITION)
 config_saver = config_util.ConfigSaver(
