@@ -5,6 +5,7 @@ import time
 import parameter_passers
 import threading
 import control_muxer
+import traceback
 
 config, offline_test_time_duration= config_util.load_config(config_filename ='test_config.py', offline_value=None, hardware_connected='True')
 
@@ -95,7 +96,7 @@ while True:
             exo.read_data(loop_time=loop_time)
             hip_angle = exo.motor_angle_to_hip_angle(config=config)
             #print('motor angle', exo.data.motor_angle, 'hip_angle: ', hip_angle, 'at time: ', loop_time)
-            #print('hip angle table', exo.data.hip_angle)
+            print('hip angle table', exo.data.hip_angle)
 
         for gait_state_estimator in gait_state_estimator_list:
             gait_state_estimator.detect()

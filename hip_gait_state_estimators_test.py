@@ -41,7 +41,7 @@ class HipTestGaitEventDetectors(unittest.TestCase):
         hip_toe_off_detector = hip_gait_state_estimators.HipToeOffDetector(
             maximum_angle=-3, angle_filter=filters.Butterworth(N=2, Wn=0.1))
         gait_phase_estimator = hip_gait_state_estimators.StrideAverageGaitPhaseEstimator(
-            num_strides_required=2, min_allowable_stride_duration=0.4, max_allowable_stride_duration=1)
+            num_strides_required=2, min_allowable_stride_duration=0.4, max_allowable_stride_duration=10)
         hip_heel_strike_detector = hip_gait_state_estimators.GaitPhaseBasedHipHeelStrikeDetector(
             fraction_of_gait=0.4)
         gait_event_detector = hip_gait_state_estimators.GaitStateEstimator(
@@ -67,7 +67,7 @@ class HipTestGaitEventDetectors(unittest.TestCase):
             time.sleep(0.005)
         #print('gait phases: ',gait_phases)
         plt.plot(did_toe_offs, label='toe off')
-        plt.plot(did_heel_strikes, label="heel strike")
+        plt.plot(did_heel_strikes, label='heel strike')
         plt.plot(gait_phases, label='gait phase', linestyle='--')
         #plt.plot(angle_values, label='angle')
         plt.plot(filtered_angles, label='filtered angles')

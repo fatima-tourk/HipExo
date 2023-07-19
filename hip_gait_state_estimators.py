@@ -56,8 +56,7 @@ class HipToeOffDetector():
             self.angle_history[1] < self.angle_history[0] and
                 self.angle_history[1] < self.angle_history[2]):
             self.timer.start()
-            print('Toe Off detected')
-            print(self.angle_history)
+            #print(self.angle_history)
         if self.timer.check():
             self.timer.reset()
             return True
@@ -124,6 +123,7 @@ class StrideAverageGaitPhaseEstimator():
             self.time_of_last_toe_off = time_now
             self.mean_stride_duration = self.stride_duration_filter.filter(
                 stride_duration)
+            print('stride duration', stride_duration)
 
         time_since_last_toe_off = time_now - self.time_of_last_toe_off
         if all(self.min_allowable_stride_duration < last_stride_duration
