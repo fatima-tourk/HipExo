@@ -56,7 +56,7 @@ class HipToeOffDetector():
             self.angle_history[1] < self.angle_history[0] and
                 self.angle_history[1] < self.angle_history[2]):
             self.timer.start()
-            #print(self.angle_history)
+            print('Toe off: ',self.angle_history)
         if self.timer.check():
             self.timer.reset()
             return True

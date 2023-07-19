@@ -32,7 +32,6 @@ def get_gse_and_sm_lists(exo_list, config: Type[config_util.ConfigurableConstant
                 gait_phase_estimator=gait_phase_estimator,
                 toe_off_detector=toe_off_detector,
                 do_print_toe_offs=config.PRINT_TO)
-            print('hey im walkin here')
             gait_state_estimator_list.append(gait_state_estimator)
 
             # Define State Machine

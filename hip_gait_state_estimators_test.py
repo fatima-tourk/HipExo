@@ -60,7 +60,7 @@ class HipTestGaitEventDetectors(unittest.TestCase):
         butterworth_filter = filters.Butterworth(N=2, Wn=0.1)
 
         for angle_value in angle_values:
-            data.hip_angle = -1*angle_value
+            data.hip_angle = angle_value
             gait_event_detector.detect()
             did_toe_offs.append(data.did_toe_off)
             gait_phases.append(data.gait_phase)
