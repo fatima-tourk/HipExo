@@ -107,12 +107,12 @@ class Exo():
             print('Exo obj created but no hip_exo connected. Some methods available')
         elif self.dev_id in constants.LEFT_EXO_DEV_IDS:
             self.side = constants.Side.LEFT
-            self.motor_sign = 1
+            self.motor_sign = -1
             if not self.IS_HARDWARE_CONNECTED: 
                 self.actpack_data = offline_data_left
         elif self.dev_id in constants.RIGHT_EXO_DEV_IDS:
             self.side = constants.Side.RIGHT
-            self.motor_sign = -1
+            self.motor_sign = 1
             if not self.IS_HARDWARE_CONNECTED: 
                 self.actpack_data = offline_data_right
         else:
