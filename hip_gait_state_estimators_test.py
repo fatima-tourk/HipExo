@@ -35,9 +35,9 @@ class HipTestGaitEventDetectors(unittest.TestCase):
         
         # Read angle values from Excel file
         #df = pd.read_csv('C:/Users/ft700/Documents/Shepherd Lab/Hip Exo Code/Exoboot_Code/HipExo/exo_data/20230717_1455_walking 7_LEFT.csv')
-        #df = pd.read_csv('C:/Users/ft700/Documents/Shepherd Lab/Hip Exo Code/Exoboot_Code/HipExo/exo_data/20230718_1732_extended walking 2_LEFT.csv')
-        df = pd.read_csv('C:/Users/ft700/Documents/Shepherd Lab/Hip Exo Code/Exoboot_Code/HipExo/exo_data/20230719_1532_walking motor signs flipped_LEFT.csv')
-        
+        df = pd.read_csv('C:/Users/ft700/Documents/Shepherd Lab/Hip Exo Code/Exoboot_Code/HipExo/exo_data/20230718_1732_extended walking 2_LEFT.csv')
+        #df = pd.read_csv('C:/Users/ft700/Documents/Shepherd Lab/Hip Exo Code/Exoboot_Code/HipExo/exo_data/20230719_1532_walking motor signs flipped_LEFT.csv')
+        #df = pd.read_csv('C:/Users/ft700/Documents/Shepherd Lab/Hip Exo Code/Exoboot_Code/HipExo/exo_data/20230719_1650_walking test 4_LEFT.csv')
         angle_values = df['hip_angle'].tolist()
 
         hip_toe_off_detector = hip_gait_state_estimators.HipToeOffDetector(
@@ -65,7 +65,7 @@ class HipTestGaitEventDetectors(unittest.TestCase):
             did_toe_offs.append(data.did_toe_off)
             gait_phases.append(data.gait_phase)
             did_heel_strikes.append(data.did_heel_strike)
-            filtered_angles.append(butterworth_filter.filter(data.hip_angle))
+            filtered_angles.append(-1*butterworth_filter.filter(data.hip_angle))
             time.sleep(0.005)
         #print('gait phases: ',gait_phases)
         plt.plot(did_toe_offs, label='toe off')
