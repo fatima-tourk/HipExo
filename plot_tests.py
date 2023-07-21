@@ -2,7 +2,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Read the CSV file and extract 'hip_angle' and 'gait_phase' columns
-filename = 'C:/Users/ft700/Documents/Shepherd Lab/Hip Exo Code/Exoboot_Code/HipExo/exo_data/20230718_1732_extended walking 2_LEFT.csv'
+#filename = 'C:/Users/ft700/Documents/Shepherd Lab/Hip Exo Code/Exoboot_Code/HipExo/exo_data/20230718_1732_extended walking 2_LEFT.csv'
+filename = 'exo_data/20230721_1608_pause_print test 1_LEFT.csv'
 data = pd.read_csv(filename)
 hip_angle = data['hip_angle']
 gait_phase = data['gait_phase']
