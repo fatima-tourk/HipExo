@@ -51,36 +51,36 @@ class Controller(object):
         self.k_val = k_val
         self.b_val = b_val
         super().update_controller_gains(Kp=Kp, Ki=Ki, Kd=Kd, ff=ff)
-        self.ankle_angles = deque(maxlen=5)  # looking for peak in pf
-        self.ankle_angle_filter = filters.Butterworth(N=2, Wn=0.1)
+        self.hip_angles = deque(maxlen=5)  # looking for peak in pf
+        self.hip_angle_filter = filters.Butterworth(N=2, Wn=0.1)
 
     def command(self, reset=False):
         if reset:
             self.is_taught = False
             self.found_setpt = False
             self.do_engage = False
-            self.ankle_angles.clear()  # Reset the ankle angle deque
-            self.ankle_angle_filter.restart()  # Reset the filter
+            self.hip_angles.clear()  # Reset the hip angle deque
+            self.hip_angle_filter.restart()  # Reset the filter
             super().command_gains()
             self.exo.data.gen_var2 = None
-        self.ankle_angles.appendleft(
-            self.ankle_angle_filter.filter(self.exo.data.ankle_angle))
-        self.exo.data.gen_var3 = self.ankle_angles[0]
+        self.hip_angles.appendleft(
+            self.hip_angle_filter.filter(self.exo.data.hip_angle))
+        self.exo.data.gen_var3 = self.hip_angles[0]
 
         if self.found_setpt is False:
             # TODO(maxshep) see if you want to change min val
-            if len(self.ankle_angles) == 5 and (self.ankle_angles[1] > self.ankle_angles[0] and
-                                                self.ankle_angles[1] > self.ankle_angles[2]) and (
-                    self.ankle_angles[0] > 5):
-                self.exo.data.gen_var2 = self.ankle_angles[1]
+            if len(self.hip_angles) == 5 and (self.hip_angles[1] > self.hip_angles[0] and
+                                                self.hip_angles[1] > self.hip_angles[2]) and (
+                    self.hip_angles[0] > 5):
+                self.exo.data.gen_var2 = self.hip_angles[1]
                 self.found_setpt = True
-                self._update_setpoint(theta0=self.ankle_angles[1])
+                self._update_setpoint(theta0=self.hip_angles[1])
 
         if self.is_taught and self.found_setpt:
             self.exo.update_gains(Kp=20, Ki=200, Kd=0, ff=60)
             # super().command_gains()
             # print('engaged..., desired k_val: ', self.k_val,
-            #       'setpoint: ', self.ankle_angles[0])
+            #       'setpoint: ', self.hip_angles[0])
             self.exo.command_motor_impedance(
                 theta0=self.theta0_motor, k_val=self.k_val, b_val=self.b_val)
             self.exo.data.gen_var1 = 6
@@ -93,11 +93,11 @@ class Controller(object):
             self.exo.data.gen_var1 = 5
 
     def _update_setpoint(self, theta0):
-        '''Take in desired ankle setpoint (deg) and stores equivalent motor angle.'''
-        if theta0 > constants.MAX_ANKLE_ANGLE or theta0 < constants.MIN_ANKLE_ANGLE:
+        '''Take in desired hip setpoint (deg) and stores equivalent motor angle.'''
+        if theta0 > constants.MAX_HIP_ANGLE or theta0 < constants.MIN_HIP_ANGLE:
             raise ValueError(
                 'Attempted to command a set point outside the range of motion')
-        self.theta0_motor = self.exo.ankle_angle_to_motor_angle(theta0)
+        self.theta0_motor = self.exo.hip_angle_to_motor_angle(theta0)
 
     def update_ctrl_params_from_config(self, config: Type[config_util.ConfigurableConstants]):
         'Updates controller parameters from the config object.'''
@@ -290,7 +290,7 @@ class GenericImpedanceController(Controller):
     def command(self, reset=False):
         if reset:
             super().command_gains()
-        theta0_motor = self.exo.ankle_angle_to_motor_angle(self.setpoint)
+        theta0_motor = self.exo.hip_angle_to_motor_angle(self.setpoint)
         self.exo.command_motor_impedance(
             theta0=theta0_motor, k_val=self.k_val, b_val=self.b_val)
 

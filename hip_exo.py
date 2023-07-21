@@ -336,15 +336,16 @@ class Exo():
             raise ValueError(
                 'abs(desired_mA) must be < config.max_allowable_current')
         if self.IS_HARDWARE_CONNECTED:
-            fxs.send_motor_command(
-                dev_id=self.dev_id, ctrl_mode=fxe.FX_CURRENT, value=desired_mA)
+            '''fxs.send_motor_command(
+                dev_id=self.dev_id, ctrl_mode=fxe.FX_CURRENT, value=desired_mA)'''
+            print(desired_mA)
         self.data.commanded_current = desired_mA
         self.data.commanded_position = None
         self.data.commanded_voltage = None
 
     def command_voltage(self, desired_mV: int):
         '''Commands voltage (mV), with positive = DF on right, PF on left.
-        DIFFEENT FROM OLD BOOTS'''
+        DIFFERENT FROM OLD BOOTS'''
         if abs(desired_mV) > constants.MAX_ALLOWABLE_VOLTAGE_COMMAND:
             raise ValueError(
                 'abs(desired_mV) must be < constants.MAX_ALLOWABLE_VOLTAGE_COMMAND')
@@ -445,14 +446,12 @@ class Exo():
     def _motor_current_to_hip_torque(self, current: int) -> float:
         '''Converts current (mA) to torque (Nm), based on side and transmission ratio (no dynamics)'''
         motor_torque = current*constants.MOTOR_CURRENT_TO_MOTOR_TORQUE
-        hip_torque = motor_torque * \
-            self.TR
+        hip_torque = motor_torque * self.TR
         return hip_torque
 
     def _hip_torque_to_motor_current(self, torque: float) -> int:
         '''Converts torque (Nm) to current (mA), based on side and transmission ratio (no dynamics)'''
-        motor_torque = torque / \
-            self.TR
+        motor_torque = torque / self.TR
         motor_current = int(
             motor_torque / constants.MOTOR_CURRENT_TO_MOTOR_TORQUE)
 

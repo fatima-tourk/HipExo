@@ -12,7 +12,7 @@ LEFT_ANKLE_ANGLE_OFFSET = -92  # deg
 RIGHT_ANKLE_ANGLE_OFFSET = 88  # deg
 
 # Add to these lists if dev_ids change, or new exos or actpacks are purchased!
-RIGHT_EXO_DEV_IDS = [65295, 3148, 1234,1416]
+RIGHT_EXO_DEV_IDS = [65295, 3148, 1234]
 LEFT_EXO_DEV_IDS = [63086, 2873, 4321,1416]
 
 MS_TO_SECONDS = 0.001
@@ -26,7 +26,8 @@ MOTOR_CLICKS_TO_DEG = (360/16384)*0.1125
 # Getting the motor current to motor torque conversion is tricky, and any updates to
 # the firmware should confirm that Dephy has not changed their internal current units.
 # This constant assumes we are using q-axis current.
-MOTOR_CURRENT_TO_MOTOR_TORQUE = 0.000146  # mA to Nm
+# multiply by current and TR to get hip torque
+MOTOR_CURRENT_TO_MOTOR_TORQUE = 0.000120  # mA to Nm
 
 # Dephy units to deg/s --experimentally estimated because their numbers are wrong
 DEPHY_VEL_TO_MOTOR_VEL = 0.025*ENC_CLICKS_TO_DEG
@@ -57,9 +58,10 @@ DEFAULT_KD = 0
 # Feedforward term. "0 is 0% and 128 (possibly unstable!) is 100%."
 DEFAULT_FF = 120  # 126
 
-# TODO(maxshep) raise these when it seems safe
+# Safety commands
 MAX_ALLOWABLE_VOLTAGE_COMMAND = 3000  # mV
-MAX_ALLOWABLE_CURRENT_COMMAND = 25000  # mA
+MAX_ALLOWABLE_CURRENT_COMMAND = 10000  # mA
+MIN_ALLOWABLE_CURRENT_COMMAND = -10000 # mA
 MAX_ALLOWABLE_K_COMMAND = 8000  # Dephy Internal Units
 MAX_ALLOWABLE_B_COMMAND = 5500  # NOT TESTED!
 

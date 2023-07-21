@@ -9,9 +9,10 @@ from scipy import signal
 import filters
 
 folder = 'exo_data/'
-filename = "20211130_1141_m1_LEFT.csv"
+filename = "20230719_1650_walking test 4_LEFT.csv"
 
-df = pd.read_csv(folder + '/' + filename, usecols=np.arange(23))
+#df = pd.read_csv(folder + '/' + filename, usecols=np.arange(23))
+df = pd.read_csv(folder + '/' + filename)
 # df = pd.read_csv(folder + '/' + filename, usecols=np.arange(22))
 
 
@@ -45,6 +46,12 @@ plt.plot(df.loop_time, df.gait_phase, 'k-')
 plt.plot(df.loop_time, -1*df.did_toe_off, 'b-')
 plt.plot(df.loop_time, 0.9*np.ones_like(df.loop_time), 'k:')
 # plt.plot(df.loop_time, filtered_ankle_angle, 'b--')
+
+plt.xlabel('Time')
+plt.ylabel('Value')
+
+# Add the legend
+plt.legend()
 
 # plt.plot(df.loop_time, df.gen_var1, 'b-')
 # plt.plot(df.loop_time, df.gen_var2, 'k-')

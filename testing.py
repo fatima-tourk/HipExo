@@ -75,12 +75,24 @@ while True:
         lock.release()
 
         for exo in exo_list:
+            # Read exo data
+            exo.read_data(loop_time=loop_time)
+            hip_angle = exo.motor_angle_to_hip_angle(config=config)
+            print('hip angle', exo.data.hip_angle)
+        
+        for gait_state_estimator in gait_state_estimator_list:
+            gait_state_estimator.detect()
+        if not config.READ_ONLY:
+            for state_machine in state_machine_list:
+                state_machine.step(read_only=config.READ_ONLY)
+
+        '''for exo in exo_list:
             if controller==0:
                 pass
-                #print('no controller selected, reading data only')
             elif controller==1:
                 desired_mA = int(input('Enter desired current in mA'))
                 exo.command_current(desired_mA=desired_mA)
+
             elif controller==2:
                 desired_mV = int(input('Enter desired voltage in mV'))
                 exo.command_voltage(desired_mV=desired_mV)
@@ -94,19 +106,9 @@ while True:
                 exo.command_impedance(theta0=theta0, k_val=k_val, b_val=b_val)
             elif controller==5:
                 desired_torque = float(input('Enter desired torque in Nm'))
-                exo.command_motor_torque(desired_torque=desired_torque)
+                exo.command_motor_torque(desired_torque=desired_torque)'''
             
-            # Read and write exo data
-            exo.read_data(loop_time=loop_time)
-            hip_angle = exo.motor_angle_to_hip_angle(config=config)
-            #print('motor angle', exo.data.motor_angle, 'hip_angle: ', hip_angle, 'at time: ', loop_time)
-            print('hip angle', exo.data.hip_angle)
-
-        for gait_state_estimator in gait_state_estimator_list:
-            gait_state_estimator.detect()
-        if not config.READ_ONLY:
-            for state_machine in state_machine_list:
-                state_machine.step(read_only=config.READ_ONLY)
+            
         for exo in exo_list:
             exo.write_data()
 
