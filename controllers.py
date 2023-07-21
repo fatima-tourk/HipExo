@@ -132,6 +132,7 @@ class GenericSplineController(Controller):
 
     def command(self, reset=False):
         '''Commands appropriate control. If reset=True, this controller was just switched to.'''
+        print('COMMAND ACTIVATED')
         if reset:
             super().command_gains()
             self.t0 = time.perf_counter()

@@ -50,17 +50,14 @@ print(config.TARGET_FREQ)
 t0 = time.perf_counter()
 config_saver.write_data(loop_time=0)  # Write first row on config
 
-#Select controller
+'''#Select controller
 print('What controller would you like to use?')
 print('0: no controller \n 1: current \n 2: voltage \n 3: motor angle \n 4: impedance \n 5: torque')
-controller = int(input('Enter the number of the controller you would like to use'))
+controller = int(input('Enter the number of the controller you would like to use'))'''
 while True:
     try:
-        beginning_of_loop = time.perf_counter() - t0
         timer.pause()
         loop_time = time.perf_counter() - t0
-        pause_length = loop_time - beginning_of_loop
-        print("pause length", pause_length)
 
         lock.acquire()
         if new_params_event.is_set():

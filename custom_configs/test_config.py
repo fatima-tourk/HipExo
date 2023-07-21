@@ -2,8 +2,8 @@
 import config_util
 config = config_util.ConfigurableConstants()
 
-config.TARGET_FREQ = 500
-config.READ_ONLY = True
+config.TARGET_FREQ = 200
+config.READ_ONLY = False
 
 
 ''' Here are the variables that are updatable in config, and their defaults:
