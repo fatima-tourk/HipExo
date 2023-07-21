@@ -141,7 +141,6 @@ class OneStateMachine(HighLevelController):
     def step(self, read_only=False):
         self.controller_now = self.phase_controller
         did_controllers_switch = False
-        print('controller is', self.controller_now)
         if not read_only:
             self.controller_now.command(reset=did_controllers_switch)
 

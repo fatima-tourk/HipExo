@@ -10,7 +10,6 @@ import traceback
 config, offline_test_time_duration= config_util.load_config(config_filename ='test_config.py', offline_value=None, hardware_connected='True')
 
 IS_HARDWARE_CONNECTED = config.IS_HARDWARE_CONNECTED
-#print('hardware connected: ',IS_HARDWARE_CONNECTED)
 offline_data_left, offline_data_right = None, None
 
 file_ID = input(
