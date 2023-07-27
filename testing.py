@@ -76,7 +76,7 @@ while True:
             # Read exo data
             exo.read_data(loop_time=loop_time)
             hip_angle = exo.motor_angle_to_hip_angle(config=config)
-            print('hip angle', exo.data.hip_angle)
+            #print('hip angle', exo.data.hip_angle)
         
         for gait_state_estimator in gait_state_estimator_list:
             gait_state_estimator.detect()

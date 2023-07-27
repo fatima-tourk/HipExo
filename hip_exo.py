@@ -406,6 +406,7 @@ class Exo():
             self.is_clipping = False
 
         desired_current = self._hip_torque_to_motor_current(torque=desired_torque)
+        print('desired current', desired_current)
         self.command_current(desired_mA = desired_current)
         if do_return_command_torque:
             return desired_torque
