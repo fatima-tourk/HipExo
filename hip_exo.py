@@ -339,8 +339,8 @@ class Exo():
             raise ValueError(
                 'abs(desired_mA) must be < config.max_allowable_current')
         if self.IS_HARDWARE_CONNECTED:
-            '''fxs.send_motor_command(
-                dev_id=self.dev_id, ctrl_mode=fxe.FX_CURRENT, value=desired_mA)'''
+            fxs.send_motor_command(
+                dev_id=self.dev_id, ctrl_mode=fxe.FX_CURRENT, value=desired_mA)
             print(desired_mA)
         self.data.commanded_current = desired_mA
         self.data.commanded_position = None
@@ -394,25 +394,15 @@ class Exo():
         self.data.commanded_torque = desired_torque
         max_allowable_torque = self.calculate_max_allowable_torque()
         min_allowable_torque = self.calculate_min_allowable_torque()
-        print('min allowable torque', min_allowable_torque)
-        if abs(desired_torque) > max_allowable_torque: # add min allowable torque
-            print('desired torque in command torque method 4', desired_torque)
+        if abs(desired_torque) > max_allowable_torque:
             if self.is_clipping is False:  # Only print once when clipping occurs before reset
                 logging.warning('Torque was clipped!')
-            if desired_torque > max_allowable_torque:
-                desired_torque = max_allowable_torque
-                print('desired torque in command torque method 5', desired_torque)
-            if desired_torque < min_allowable_torque:
-                desired_torque = min_allowable_torque
-                print('desired torque in command torque method 6', desired_torque)
+            desired_torque = min(desired_torque, max_allowable_torque)
+            desired_torque = max(desired_torque, min_allowable_torque)
             self.is_clipping = True
-            print('desired torque in command torque method 7', desired_torque)
         else:
             self.is_clipping = False
-            print('desired torque in command torque method 8', desired_torque)
-        print('desired torque in command torque method 9', desired_torque)
         desired_current = self._hip_torque_to_motor_current(torque=desired_torque)
-        #print('desired current', desired_current)
         self.command_current(desired_mA = desired_current)
         if do_return_command_torque:
             return desired_torque
@@ -435,15 +425,10 @@ class Exo():
         '''Calculates max allowable torque from self.max_allowable_current and hip_angle.'''
         max_allowable_torque = max(
             0, self._motor_current_to_hip_torque(current=self.max_allowable_current))
-        print('current in max allowable torque', self.max_allowable_current)
-        print('max allowable torque', max_allowable_torque)
         return max_allowable_torque
     
     def calculate_min_allowable_torque(self):
         '''Calculates min allowable torque from self.min_allowable_current and hip_angle.'''
-        #print('motor sign', self.motor_sign)
-        print('current in min allowable torque', self.min_allowable_current)
-        print('min allowable torque', self._motor_current_to_hip_torque(current=self.min_allowable_current))
         min_allowable_torque = min(
             0, self._motor_current_to_hip_torque(current=self.min_allowable_current))
         return min_allowable_torque
