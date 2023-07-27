@@ -57,6 +57,7 @@ def connect_to_exos(IS_HARDWARE_CONNECTED,file_ID: str,
                 exo_list.append(Exo(IS_HARDWARE_CONNECTED,dev_id=dev_id, file_ID=file_ID,
                                     target_freq=config.TARGET_FREQ,
                                     max_allowable_current=config.MAX_ALLOWABLE_CURRENT,
+                                    min_allowable_current=config.MIN_ALLOWABLE_CURRENT,
                                     do_include_gen_vars=config.DO_INCLUDE_GEN_VARS,
                                     sync_detector=sync_detector))
                 print('exo',exo_list)
@@ -66,6 +67,7 @@ def connect_to_exos(IS_HARDWARE_CONNECTED,file_ID: str,
                 exo_list.append(Exo(IS_HARDWARE_CONNECTED, dev_id=int(port_numbers[count]), file_ID=file_ID,
                                             target_freq=config.TARGET_FREQ,
                                             max_allowable_current=config.MAX_ALLOWABLE_CURRENT,
+                                            min_allowable_current=config.MIN_ALLOWABLE_CURRENT,
                                             do_include_gen_vars=config.DO_INCLUDE_GEN_VARS,
                                             sync_detector=sync_detector,
                                             offline_data_left= offline_data_left,
@@ -84,6 +86,7 @@ class Exo():
                  IS_HARDWARE_CONNECTED,
                  dev_id: int,
                  max_allowable_current: int,
+                 min_allowable_current: int,
                  file_ID: str = None,
                  target_freq: float = 200,
                  do_include_gen_vars: bool = False,
@@ -100,6 +103,7 @@ class Exo():
         self.right_side_offline_data = offline_data_right
         self.dev_id = dev_id
         self.max_allowable_current = max_allowable_current
+        self.min_allowable_current = min_allowable_current
         self.file_ID = file_ID
         self.do_include_sync = True if sync_detector else False
         self.sync_detector = sync_detector
@@ -123,11 +127,10 @@ class Exo():
         self.hip_velocity_filter = filters.Butterworth(
             N=2, Wn=10, fs=target_freq)
         self.angle_filter = filters.Butterworth(
-            N=2, Wn=10, fs=target_freq)
+            N=2, Wn=1, fs=target_freq)
 
         self.data = self.DataContainer(
             do_include_gen_vars=do_include_gen_vars, do_include_sync=self.do_include_sync)
-        self.has_calibrated = False
         self.is_clipping = False
         if self.file_ID is not None:
             self.setup_data_writer(file_ID=file_ID)
@@ -387,39 +390,23 @@ class Exo():
         self.data.commanded_position = None
         self.data.commanded_torque = None
 
-    def command_torque(self, desired_torque: float, do_return_command_torque=False, do_ease_torque_off=True):
-        '''Applies desired torque (Nm) in plantarflexion only (positive torque)'''
-        self.data.commanded_torque = desired_torque  # TODO(maxshep) remove
-        if desired_torque < 0:
-            print('desired_torque: ', desired_torque)
-            raise ValueError('Cannot apply negative torques')
+    def command_torque(self, desired_torque: float, do_return_command_torque=False):
+        self.data.commanded_torque = desired_torque 
         max_allowable_torque = self.calculate_max_allowable_torque()
-        if desired_torque > max_allowable_torque:
+        min_allowable_torque = self.calculate_min_allowable_torque()
+        if abs(desired_torque) > max_allowable_torque: # add min allowable torque
             if self.is_clipping is False:  # Only print once when clipping occurs before reset
                 logging.warning('Torque was clipped!')
-            desired_torque = max_allowable_torque
+            if desired_torque > max_allowable_torque:
+                desired_torque = max_allowable_torque
+            if desired_torque < min_allowable_torque:
+                desired_torque = min_allowable_torque
             self.is_clipping = True
         else:
             self.is_clipping = False
 
-        # Softly reduce desired torque at high hip angles when TR approaches 0
-        # EDIT HIP ANGLE RANGE 
-        if do_ease_torque_off:
-            reel_in_current = self.motor_sign*1000
-            if self.data.hip_angle > 25:
-                desired_current = reel_in_current  # A small amount to stay reeled in
-            elif 20 < self.data.hip_angle <= 25:  # Window of taper
-                desired_torque = desired_torque*(25-self.data.hip_angle)/5
-                desired_current = max(reel_in_current, self._hip_torque_to_motor_current(
-                    torque=desired_torque))
-            else:
-                desired_current = self._hip_torque_to_motor_current(
-                    torque=desired_torque)
-        else:
-            desired_current = self._hip_torque_to_motor_current(
-                torque=desired_torque)
-
-        self.command_current(desired_mA=desired_current)
+        desired_current = self._hip_torque_to_motor_current(torque=desired_torque)
+        self.command_current(desired_mA = desired_current)
         if do_return_command_torque:
             return desired_torque
 
@@ -442,6 +429,12 @@ class Exo():
         max_allowable_torque = max(
             0, self._motor_current_to_hip_torque(current=self.motor_sign*self.max_allowable_current))
         return max_allowable_torque
+    
+    def calculate_min_allowable_torque(self):
+        '''Calculates min allowable torque from self.min_allowable_current and hip_angle.'''
+        min_allowable_torque = min(
+            0, self._motor_current_to_hip_torque(current=self.motor_sign*self.min_allowable_current))
+        return min_allowable_torque
 
     def _motor_current_to_hip_torque(self, current: int) -> float:
         '''Converts current (mA) to torque (Nm), based on side and transmission ratio (no dynamics)'''
@@ -469,11 +462,7 @@ class Exo():
     
     def hip_angle_to_motor_angle(self):
         '''Calculate hip angle from motor angle.'''
-        if not self.has_calibrated:
-            raise ValueError(
-                'Must perform standing calibration before performing this task')
-        else:
-            motor_angle = (self.data.hip_angle)/constants.MOTOR_CLICKS_TO_DEG
+        motor_angle = (self.data.hip_angle)/constants.MOTOR_CLICKS_TO_DEG
         return motor_angle 
     
     def hip_standing_calibration(self, config: Type[config_util.ConfigurableConstants],
@@ -493,5 +482,4 @@ class Exo():
     
     def standing_calibration_offline(self, past_motor_offset):
         '''Brings motor offset angles.'''
-        self.has_calibrated = True
         self.motor_offset = past_motor_offset

@@ -31,14 +31,14 @@ class HipTestGaitEventDetectors(unittest.TestCase):
         #sampling_freq = 100
         #time_nows = 1/sampling_freq * np.arange(0, 7000)
         # about 1 heel strike per second
-        #angle_values = hip_angle_spline.generate_hip_angle()
+        angle_values = hip_angle_spline.generate_hip_angle()
         
         # Read angle values from Excel file
         #df = pd.read_csv('C:/Users/ft700/Documents/Shepherd Lab/Hip Exo Code/Exoboot_Code/HipExo/exo_data/20230717_1455_walking 7_LEFT.csv')
-        df = pd.read_csv('C:/Users/ft700/Documents/Shepherd Lab/Hip Exo Code/Exoboot_Code/HipExo/exo_data/20230718_1732_extended walking 2_LEFT.csv')
+        #df = pd.read_csv('C:/Users/ft700/Documents/Shepherd Lab/Hip Exo Code/Exoboot_Code/HipExo/exo_data/20230718_1732_extended walking 2_LEFT.csv')
         #df = pd.read_csv('C:/Users/ft700/Documents/Shepherd Lab/Hip Exo Code/Exoboot_Code/HipExo/exo_data/20230719_1532_walking motor signs flipped_LEFT.csv')
         #df = pd.read_csv('C:/Users/ft700/Documents/Shepherd Lab/Hip Exo Code/Exoboot_Code/HipExo/exo_data/20230719_1650_walking test 4_LEFT.csv')
-        angle_values = df['hip_angle'].tolist()
+        #angle_values = df['hip_angle'].tolist()
 
         hip_toe_off_detector = hip_gait_state_estimators.HipToeOffDetector(
             maximum_angle=-3, angle_filter=filters.Butterworth(N=2, Wn=0.1))
@@ -60,7 +60,7 @@ class HipTestGaitEventDetectors(unittest.TestCase):
         butterworth_filter = filters.Butterworth(N=2, Wn=0.1)
 
         for angle_value in angle_values:
-            data.hip_angle = angle_value
+            data.hip_angle = -1 * angle_value
             gait_event_detector.detect()
             did_toe_offs.append(data.did_toe_off)
             gait_phases.append(data.gait_phase)
@@ -75,6 +75,8 @@ class HipTestGaitEventDetectors(unittest.TestCase):
         plt.plot(filtered_angles, label='filtered angles')
         plt.legend()
         plt.show()
+        
+        return gait_phases
 
 
 if __name__ == '__main__':

@@ -4,20 +4,14 @@ from enum import Enum
 
 DEFAULT_BAUD_RATE = 230400
 TARGET_FREQ = 200
-# EDIT THESE FOR GOOD HIP ANGLE RANGE
-MAX_HIP_ANGLE = 86  # 83  # degrees, plantarflexion
-MIN_HIP_ANGLE = -63  # -60  # degrees, dorsiflexion
-
-LEFT_ANKLE_ANGLE_OFFSET = -92  # deg
-RIGHT_ANKLE_ANGLE_OFFSET = 88  # deg
 
 # Add to these lists if dev_ids change, or new exos or actpacks are purchased!
-RIGHT_EXO_DEV_IDS = [65295, 3148, 1234]
-LEFT_EXO_DEV_IDS = [63086, 2873, 4321,1416]
+RIGHT_EXO_DEV_IDS = [3148, 1234]
+LEFT_EXO_DEV_IDS = [2873, 4321, 1416]
 
 MS_TO_SECONDS = 0.001
 # Converts raw Dephy encoder output to degrees
-K_TO_NM_PER_DEGREE = 0  #
+K_TO_NM_PER_DEGREE = 0  
 B_TO_NM_PER_DEGREE_PER_S = 0
 
 ENC_CLICKS_TO_DEG = 1/(2**14/360)
@@ -70,13 +64,6 @@ class Side(Enum):
     RIGHT = 1
     LEFT = 2
     NONE = 3
-
-
-# RPi's GPIO pin numbers (not physical pin number) for FSR testing
-LEFT_HEEL_FSR_PIN = 17
-LEFT_TOE_FSR_PIN = 18
-RIGHT_HEEL_FSR_PIN = 24
-RIGHT_TOE_FSR_PIN = 25
 
 # RPi's GPIO pin numbers (not physical pin number) for Sync signal
 SYNC_PIN = 16

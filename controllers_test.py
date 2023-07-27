@@ -1,30 +1,38 @@
-import controllers
+import controllers2
 import unittest
 import numpy as np
 from scipy import signal
 import matplotlib.pyplot as plt
+import hip_gait_state_estimators_test
+from hip_exo import Exo
+import logging
 
-
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+# Set the log level for matplotlib to WARNING
+logging.getLogger('matplotlib').setLevel(logging.WARNING)
 class Test_PositionController(unittest.TestCase):
 
     def test_spline_controller(self):
-        spline_x = [0, 0.2, 0.5, 0.6, 1]
-        spline_y = [0, 6, 10, 0, 0]
-        spline_controller = controllers.GenericSplineController(
-            Kp=100, Ki=20, Kd=0,
-            spline_x=spline_x, spline_y=spline_y)
-        time_nows = np.arange(0, 10, 0.01)
-        gait_phases = 0.5+0.5*(signal.sawtooth(t=time_nows, width=1))
+        exo_instance = Exo(IS_HARDWARE_CONNECTED=False, dev_id=1234, max_allowable_current=10000)
+        data=exo_instance.DataContainer()
+        spline_controller = controllers2.HipSplineController(exo=exo_instance)
+        # Create an instance of HipTestGaitEventDetectors
+        gait_event_detectors = hip_gait_state_estimators_test.HipTestGaitEventDetectors()
+        # Call the test_StrideAverageGaitPhaseEstimator method on the instance
+        gait_phases = gait_event_detectors.test_StrideAverageGaitPhaseEstimator()
         desired_currents = []
+        reset=True
         for gait_phase in gait_phases:
-            desired_currents.append(spline_controller.command(gait_phase))
+            print('before setting data.gait_phase', data.gait_phase)
+            data.gait_phase = gait_phase
+            print('after setting data.gait_phase', data.gait_phase)
+            desired_currents.append(spline_controller.command(reset))
+            reset=False
+        #logging.debug('Code 1 exo_instance memory address: %s', id(exo_instance))
+        print('Code 1 data_container memory address:', id(data))
         plt.plot(gait_phases)
         plt.plot(desired_currents)
         plt.show()
-
-    def test_spline_fade(self):
-        spline_controller = controllers.FourPointSplineController(exo)
-
 
 if __name__ == '__main__':
     unittest.main()

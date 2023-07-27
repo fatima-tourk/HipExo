@@ -6,6 +6,8 @@ import parameter_passers
 import threading
 import control_muxer
 import traceback
+import constants
+import offline_testing_file
 
 config, offline_test_time_duration= config_util.load_config(config_filename ='test_config.py', offline_value=None, hardware_connected='True')
 
@@ -44,15 +46,15 @@ print('Start!')
 
 
 timer = util.FlexibleTimer(
-    target_freq=config.TARGET_FREQ)  # attempts constants freq
-print(config.TARGET_FREQ)
+    target_freq=constants.TARGET_FREQ)  # attempts constants freq
+print(constants.TARGET_FREQ)
 t0 = time.perf_counter()
+'''keyboard_thread = parameter_passers.ParameterPasser(
+    lock=lock, config=config, quit_event=quit_event,
+    new_params_event=new_params_event)'''
 config_saver.write_data(loop_time=0)  # Write first row on config
 
-'''#Select controller
-print('What controller would you like to use?')
-print('0: no controller \n 1: current \n 2: voltage \n 3: motor angle \n 4: impedance \n 5: torque')
-controller = int(input('Enter the number of the controller you would like to use'))'''
+
 while True:
     try:
         timer.pause()
@@ -81,29 +83,6 @@ while True:
         if not config.READ_ONLY:
             for state_machine in state_machine_list:
                 state_machine.step(read_only=config.READ_ONLY)
-
-        '''for exo in exo_list:
-            if controller==0:
-                pass
-            elif controller==1:
-                desired_mA = int(input('Enter desired current in mA'))
-                exo.command_current(desired_mA=desired_mA)
-
-            elif controller==2:
-                desired_mV = int(input('Enter desired voltage in mV'))
-                exo.command_voltage(desired_mV=desired_mV)
-            elif controller==3:
-                desired_motor_angle = int(input('Enter desired motor angle'))
-                exo.command_motor_angle(desired_motor_angle=desired_motor_angle)
-            elif controller==4:
-                theta0 = int(input('Enter theta0'))
-                k_val = int(input('Enter k value'))
-                b_val= int(input('Enter b value'))
-                exo.command_impedance(theta0=theta0, k_val=k_val, b_val=b_val)
-            elif controller==5:
-                desired_torque = float(input('Enter desired torque in Nm'))
-                exo.command_motor_torque(desired_torque=desired_torque)'''
-            
             
         for exo in exo_list:
             exo.write_data()
