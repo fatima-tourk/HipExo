@@ -450,21 +450,15 @@ class Exo():
 
     def _motor_current_to_hip_torque(self, current: int) -> float:
         '''Converts current (mA) to torque (Nm), based on side and transmission ratio (no dynamics)'''
-        print('current in motor current to hip torque method', current)
         motor_torque = current*constants.MOTOR_CURRENT_TO_MOTOR_TORQUE
-        print('motor torque', motor_torque)
         hip_torque = motor_torque * self.TR
-        print('hip torque', hip_torque)
         return hip_torque
 
     def _hip_torque_to_motor_current(self, torque: float) -> int:
         '''Converts torque (Nm) to current (mA), based on side and transmission ratio (no dynamics)'''
-        #print('input torque', torque)
         motor_torque = torque / self.TR
-        #print('motor torque', motor_torque)
-        motor_current = int(
+        motor_current = int(self.motor_sign*
             motor_torque / constants.MOTOR_CURRENT_TO_MOTOR_TORQUE)
-        #print('motor current', motor_current)
         return motor_current
 
     def motor_angle_to_hip_angle(self, config: Type[config_util.ConfigurableConstants]):

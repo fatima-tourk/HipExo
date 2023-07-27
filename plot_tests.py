@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 # Read the CSV file and extract 'hip_angle' and 'gait_phase' columns
 #filename = 'C:/Users/ft700/Documents/Shepherd Lab/Hip Exo Code/Exoboot_Code/HipExo/exo_data/20230718_1732_extended walking 2_LEFT.csv'
-filename = 'exo_data/20230727_1327_currenttesting1_LEFT.csv'
+filename = 'exo_data/20230727_1451_currenttest13_LEFT.csv'
 df = pd.read_csv(filename)
 
 # Create a figure with two subplots stacked vertically
