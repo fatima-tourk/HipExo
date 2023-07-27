@@ -232,7 +232,7 @@ class HipSplineController(GenericSplineController):
                  Kd: int = constants.DEFAULT_KD,
                  ff: int = constants.DEFAULT_FF,
                  fade_duration: float = 5,
-                 bias_torque: float = 5,
+                 bias_torque: float = 0,
                  start_torque: float = -1.5,
                  extension_min_torque: float = -4,
                  flexion_max_torque: float = 2.5,
