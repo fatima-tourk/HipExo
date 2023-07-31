@@ -8,7 +8,6 @@ import constants
 from typing import Type
 import util
 import config_util
-import ml_util
 
 
 class GaitStateEstimator():
@@ -136,7 +135,7 @@ class StrideAverageGaitPhaseEstimator():
             gait_phase = None
         return gait_phase
 
-class MLGaitStateEstimator():
+'''class MLGaitStateEstimator():
     def __init__(self,
                  side: Type[constants.Side],
                  data_container: Type[hip_exo.Exo.DataContainer],
@@ -228,4 +227,4 @@ class MLGaitStateEstimator():
             print('heel strike detected on side: ', self.side)
 
     def update_params_from_config(self, config: Type[config_util.ConfigurableConstants]):
-        pass
+        pass'''

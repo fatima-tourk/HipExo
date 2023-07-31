@@ -5,7 +5,6 @@ import hip_gait_state_estimators
 import hip_exo
 import filters
 import controllers
-import ml_util
 import constants
 
 
