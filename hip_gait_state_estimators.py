@@ -143,7 +143,7 @@ class StrideAverageGaitPhaseEstimator():
                  do_print_heel_strikes=True,
                  stance_is_float=True,
                  do_filter_gait_phase=False):
-        '''Looks at the exo data, applies logic to detect HS, gait phase, and TO, and adds to exo.data'''
+        #Looks at the exo data, applies logic to detect HS, gait phase, and TO, and adds to exo.data
         self.side = side
         self.data = data_container
         self.is_stance_threshold = 0.5
