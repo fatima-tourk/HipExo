@@ -144,7 +144,7 @@ class GenericSplineController(Controller):
         if phase is None:
             # Gait phase is sometimes None
             desired_torque = 0
-            print('phase is None')
+            #print('phase is None')
         elif phase > self.spline_x[-1]:
             # If phase (elapsed time) is longer than spline is specified, use last spline point
             print('phase is longer than specified spline')

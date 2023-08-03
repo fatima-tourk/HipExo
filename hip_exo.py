@@ -170,6 +170,7 @@ class Exo():
         commanded_torque: float = None
         commanded_voltage: int = None
         temperature: int = None
+        counter: int = 0
         # Optional fields--init in __post__init__
         sync: bool = field(init=False)
         gen_var1: float = field(init=False)

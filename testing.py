@@ -48,24 +48,18 @@ def counter_thread(counter):
     while True:
         counter += 1
         time.sleep(1 / 200)  # Increment the counter every 1/200 seconds (5 milliseconds)
-        print(counter)
+        exo.data.counter = counter
 
 # Create a shared counter variable
 counter = 0
 
-# Start the counter thread
+input('Press any key to begin')
+print('Start!')
+
+# Create a thread for the counter-saving loop
 counter_thread = threading.Thread(target=counter_thread, args=(counter,))
 counter_thread.daemon = True  # Make the thread a daemon, so it will terminate when the main program exits
 counter_thread.start()
-
-# Create and open the CSV file for writing counter values
-csv_file_path = 'counter_values.csv'
-with open(csv_file_path, 'w', newline='') as csvfile:
-    csv_writer = csv.writer(csvfile)
-    csv_writer.writerow(['Timestamp', 'Counter Value'])
-
-input('Press any key to begin')
-print('Start!')
 
 timer = util.FlexibleTimer(
     target_freq=constants.TARGET_FREQ)  # attempts constants freq
@@ -75,7 +69,6 @@ t0 = time.perf_counter()
     lock=lock, config=config, quit_event=quit_event,
     new_params_event=new_params_event)'''
 config_saver.write_data(loop_time=0)  # Write first row on config
-
 
 while True:
     try:
@@ -109,11 +102,6 @@ while True:
         for exo in exo_list:
             exo.write_data()
 
-        last_count = counter
-        time.sleep(0.2)  # Adjust the sleep time according to your preference
-        if counter == last_count:  # If the counter hasn't increased, the Raspberry Pi might be frozen
-            print("Raspberry Pi might be frozen. Counter value:", counter)
-            # Perform any necessary actions if the Raspberry Pi freezes (e.g., restart or alert)
 
     except KeyboardInterrupt:
         print('Ctrl-C detected, Exiting Gracefully')
@@ -122,8 +110,6 @@ while True:
         print(traceback.print_exc())
         print("Unexpected error:", err)
         break
-
-
 
 '''Safely close files, stop streaming, optionally saves plots'''
 config_saver.close_file()
