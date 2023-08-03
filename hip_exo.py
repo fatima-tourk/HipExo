@@ -341,7 +341,6 @@ class Exo():
         if self.IS_HARDWARE_CONNECTED:
             fxs.send_motor_command(
                 dev_id=self.dev_id, ctrl_mode=fxe.FX_CURRENT, value=desired_mA)
-            print(desired_mA)
         self.data.commanded_current = desired_mA
         self.data.commanded_position = None
         self.data.commanded_voltage = None

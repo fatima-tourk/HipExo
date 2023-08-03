@@ -8,6 +8,10 @@ import control_muxer
 import traceback
 import constants
 import offline_testing_file
+import time
+import threading
+import csv
+
 
 config, offline_test_time_duration= config_util.load_config(config_filename ='test_config.py', offline_value=None, hardware_connected='True')
 
@@ -40,10 +44,28 @@ quit_event = threading.Event()
 new_params_event = threading.Event()
 # v0.2,15,0.56,0.6!
 
+def counter_thread(counter):
+    while True:
+        counter += 1
+        time.sleep(1 / 200)  # Increment the counter every 1/200 seconds (5 milliseconds)
+        print(counter)
+
+# Create a shared counter variable
+counter = 0
+
+# Start the counter thread
+counter_thread = threading.Thread(target=counter_thread, args=(counter,))
+counter_thread.daemon = True  # Make the thread a daemon, so it will terminate when the main program exits
+counter_thread.start()
+
+# Create and open the CSV file for writing counter values
+csv_file_path = 'counter_values.csv'
+with open(csv_file_path, 'w', newline='') as csvfile:
+    csv_writer = csv.writer(csvfile)
+    csv_writer.writerow(['Timestamp', 'Counter Value'])
+
 input('Press any key to begin')
 print('Start!')
-
-
 
 timer = util.FlexibleTimer(
     target_freq=constants.TARGET_FREQ)  # attempts constants freq
@@ -87,6 +109,12 @@ while True:
         for exo in exo_list:
             exo.write_data()
 
+        last_count = counter
+        time.sleep(0.2)  # Adjust the sleep time according to your preference
+        if counter == last_count:  # If the counter hasn't increased, the Raspberry Pi might be frozen
+            print("Raspberry Pi might be frozen. Counter value:", counter)
+            # Perform any necessary actions if the Raspberry Pi freezes (e.g., restart or alert)
+
     except KeyboardInterrupt:
         print('Ctrl-C detected, Exiting Gracefully')
         break
@@ -94,6 +122,8 @@ while True:
         print(traceback.print_exc())
         print("Unexpected error:", err)
         break
+
+
 
 '''Safely close files, stop streaming, optionally saves plots'''
 config_saver.close_file()

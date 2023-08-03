@@ -156,8 +156,7 @@ class GenericSplineController(Controller):
             print('fading splines')
         else:
             desired_torque = self.spline(phase)
-            print('desired torque', desired_torque)
-        print('desired torque 2', desired_torque)
+            #print('desired torque', desired_torque)
         self.exo.command_torque(desired_torque)
 
     def update_spline(self, spline_x, spline_y, first_call=False):
