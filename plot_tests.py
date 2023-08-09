@@ -4,7 +4,7 @@ import config_util
 
 # Read the CSV file and extract 'hip_angle' and 'gait_phase' columns
 #filename = 'C:/Users/ft700/Documents/Shepherd Lab/Hip Exo Code/Exoboot_Code/HipExo/exo_data/20230718_1732_extended walking 2_LEFT.csv'
-filename = 'exo_data/20230803_1325_pi counter 11_LEFT.csv'
+filename = 'exo_data/20230809_1225_plot filtered angle 2_LEFT.csv'
 df = pd.read_csv(filename)
 
 # Create a figure with two subplots stacked vertically

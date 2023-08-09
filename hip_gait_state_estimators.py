@@ -89,7 +89,7 @@ class StrideAverageGaitPhaseEstimator():
     def __init__(self,
                  num_strides_required: int = 2,
                  num_strides_to_average: int = 2,
-                 min_allowable_stride_duration: float = 0.0006,
+                 min_allowable_stride_duration: float = 0.4,
                  max_allowable_stride_duration: float = 2,  
                  mean_stride_duration: float = 1):
         ''' Returns gait phase, which is either None or in [0, 1]
