@@ -127,7 +127,7 @@ class Exo():
         self.hip_velocity_filter = filters.Butterworth(
             N=2, Wn=10, fs=target_freq)
         self.angle_filter = filters.Butterworth(
-            N=2, Wn=0.1, fs=target_freq)
+            N=2, Wn=0.2, fs=target_freq)
 
         self.data = self.DataContainer(
             do_include_gen_vars=do_include_gen_vars, do_include_sync=self.do_include_sync)
