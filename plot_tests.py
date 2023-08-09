@@ -4,7 +4,7 @@ import config_util
 
 # Read the CSV file and extract 'hip_angle' and 'gait_phase' columns
 #filename = 'C:/Users/ft700/Documents/Shepherd Lab/Hip Exo Code/Exoboot_Code/HipExo/exo_data/20230718_1732_extended walking 2_LEFT.csv'
-filename = 'exo_data/20230809_1225_plot filtered angle 2_LEFT.csv'
+filename = 'exo_data/20230809_1252_plot filtered angle 3_LEFT.csv'
 df = pd.read_csv(filename)
 
 # Create a figure with two subplots stacked vertically
@@ -16,6 +16,12 @@ ax1.plot(df.loop_time, df.hip_angle_filtered, color='orange')
 ax1.set_ylabel('Hip Angle')
 ax1.set_title('Hip Angle vs. Time')
 ax1.grid(True)  # Add gridlines to the first subplot
+
+# Plot the true or false variable as a line whenever it's true
+true_indices = df.index[df['did_toe_off']]
+for index in true_indices:
+    ax1.axvline(x=df.loc[index, 'loop_time'], color='green', linestyle='dashed', alpha=0.5)
+
 ax1.legend()
 
 # Plot 'gait_phase' on the second subplot
