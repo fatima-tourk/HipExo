@@ -44,12 +44,6 @@ quit_event = threading.Event()
 new_params_event = threading.Event()
 # v0.2,15,0.56,0.6!
 
-def counter_thread(counter):
-    while True:
-        counter += 1
-        time.sleep(1 / 200)  # Increment the counter every 1/200 seconds (5 milliseconds)
-        exo.data.counter = counter
-
 input('Press any key to begin')
 print('Start!')
 
