@@ -50,16 +50,8 @@ def counter_thread(counter):
         time.sleep(1 / 200)  # Increment the counter every 1/200 seconds (5 milliseconds)
         exo.data.counter = counter
 
-# Create a shared counter variable
-counter = 0
-
 input('Press any key to begin')
 print('Start!')
-
-# Create a thread for the counter-saving loop
-counter_thread = threading.Thread(target=counter_thread, args=(counter,))
-counter_thread.daemon = True  # Make the thread a daemon, so it will terminate when the main program exits
-counter_thread.start()
 
 timer = util.FlexibleTimer(
     target_freq=constants.TARGET_FREQ)  # attempts constants freq
