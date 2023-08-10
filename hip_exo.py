@@ -160,7 +160,7 @@ class Exo():
         motor_velocity: float = 0
         motor_current: int = 0
         hip_angle: float = 0
-        hip_angle_filtered: float = 0
+        #hip_angle_filtered: float = 0
         hip_velocity: float = 0
         hip_torque_from_current: float = 0
         did_heel_strike: bool = False
@@ -257,7 +257,7 @@ class Exo():
             self.data.motor_current = actpack_data.mot_cur
             self.data.hip_torque_from_current = self._motor_current_to_hip_torque(
                 self.data.motor_current)
-            self.data.hip_angle_filtered = (-1*self.angle_filter.filter(self.data.hip_angle))
+            #self.data.hip_angle_filtered = (-1*self.angle_filter.filter(self.data.hip_angle))
 
         else:
             hip_ang = self.actpack_data['hip_angle'][iteration_count]
