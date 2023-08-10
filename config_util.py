@@ -67,9 +67,9 @@ class ConfigurableConstants():
     #FLEXION_MAX_TORQUE: float = 2.5
     #EXTENSION_MIN_TORQUE: float = -4.0
 
-    START_TORQUE: float = -6
-    FLEXION_MAX_TORQUE: float = 10
-    EXTENSION_MIN_TORQUE: float = -16.0
+    START_TORQUE: float = -3
+    FLEXION_MAX_TORQUE: float = 5
+    EXTENSION_MIN_TORQUE: float = -8.0
 
     # Impedance
     K_VAL: int = 500
