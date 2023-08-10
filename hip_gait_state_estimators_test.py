@@ -15,7 +15,7 @@ class HipTestGaitEventDetectors(unittest.TestCase):
         data = Exo.DataContainer()
         angle_signal = [0, 0, 0, 5, 3, 1, 2, 3, 0, 0, 0]
         toe_off_detector = hip_gait_state_estimators.HipToeOffDetector(
-            maximum_angle=-15, angle_filter=filters.Butterworth(N=2, Wn=0.4), delay=0)
+            maximum_angle=-15, angle_filter=filters.Butterworth(N=2, Wn=0.1), delay=0)
         did_toe_offs = []
         for angle_val in angle_signal:
             data.hip_angle = angle_val
@@ -38,7 +38,7 @@ class HipTestGaitEventDetectors(unittest.TestCase):
         #df = pd.read_csv('C:/Users/ft700/Documents/Shepherd Lab/Hip Exo Code/Exoboot_Code/HipExo/exo_data/20230718_1732_extended walking 2_LEFT.csv')
         #df = pd.read_csv('C:/Users/ft700/Documents/Shepherd Lab/Hip Exo Code/Exoboot_Code/HipExo/exo_data/20230719_1532_walking motor signs flipped_LEFT.csv')
         #df = pd.read_csv('C:/Users/ft700/Documents/Shepherd Lab/Hip Exo Code/Exoboot_Code/HipExo/exo_data/20230719_1650_walking test 4_LEFT.csv')
-        filename = 'exo_data/20230809_1624_plot filtered angle 4_LEFT.csv'
+        filename = 'exo_data/20230810_1128_flex torque 5_LEFT.csv'
         df = pd.read_csv(filename)
         angle_values = df['hip_angle'].tolist()
 
