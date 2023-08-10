@@ -50,6 +50,7 @@ class HipToeOffDetector():
 
     def detect(self, data: Type[hip_exo.Exo.DataContainer]):
         self.angle_history.appendleft(-1*self.angle_filter.filter(data.hip_angle))
+        data.hip_angle_filtered = -1*self.angle_filter.filter(data.hip_angle)
         #print(self.angle_history)
         if (self.angle_history[1] < self.maximum_angle and
             self.angle_history[1] < self.angle_history[0] and

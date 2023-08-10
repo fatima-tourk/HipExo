@@ -160,7 +160,7 @@ class Exo():
         motor_velocity: float = 0
         motor_current: int = 0
         hip_angle: float = 0
-        #hip_angle_filtered: float = 0
+        hip_angle_filtered: float = 0
         hip_velocity: float = 0
         hip_torque_from_current: float = 0
         did_heel_strike: bool = False

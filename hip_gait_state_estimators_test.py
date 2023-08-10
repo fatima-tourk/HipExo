@@ -38,7 +38,7 @@ class HipTestGaitEventDetectors(unittest.TestCase):
         #df = pd.read_csv('C:/Users/ft700/Documents/Shepherd Lab/Hip Exo Code/Exoboot_Code/HipExo/exo_data/20230718_1732_extended walking 2_LEFT.csv')
         #df = pd.read_csv('C:/Users/ft700/Documents/Shepherd Lab/Hip Exo Code/Exoboot_Code/HipExo/exo_data/20230719_1532_walking motor signs flipped_LEFT.csv')
         #df = pd.read_csv('C:/Users/ft700/Documents/Shepherd Lab/Hip Exo Code/Exoboot_Code/HipExo/exo_data/20230719_1650_walking test 4_LEFT.csv')
-        filename = 'exo_data/20230810_1128_flex torque 5_LEFT.csv'
+        filename = 'exo_data/20230810_1200_flex torque 5 test 2_LEFT.csv'
         df = pd.read_csv(filename)
         angle_values = df['hip_angle'].tolist()
 
