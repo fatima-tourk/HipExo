@@ -48,7 +48,7 @@ class ConfigurableConstants():
     HEEL_STRIKE_FRACTION: float = 0.40
     NUM_STRIDES_REQUIRED: int = 2
     SWING_ONLY: bool = False
-    MAXIMUM_ANGLE: float = 1
+    MAXIMUM_ANGLE: float = 0
 
     # 4 point Spline
     RISE_FRACTION: float = 0.278
