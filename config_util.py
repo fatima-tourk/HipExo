@@ -37,8 +37,8 @@ class ConfigurableConstants():
     DO_DEPHY_LOG: bool = True
 
     TASK: Type[Task] = Task.WALKING
-    MAX_ALLOWABLE_CURRENT = 17000  # mA
-    MIN_ALLOWABLE_CURRENT = -17000 # mA
+    MAX_ALLOWABLE_CURRENT = 20000  # mA
+    MIN_ALLOWABLE_CURRENT = -20000 # mA
 
     # Gait State details
     HS_ANGLE_FILTER_N: int = 2
@@ -69,7 +69,7 @@ class ConfigurableConstants():
 
     START_TORQUE: float = -9
     FLEXION_MAX_TORQUE: float = 15
-    EXTENSION_MIN_TORQUE: float = -24.0
+    EXTENSION_MIN_TORQUE: float = -19
 
     # Impedance
     K_VAL: int = 500
