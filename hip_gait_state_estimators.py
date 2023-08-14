@@ -49,7 +49,7 @@ class HipToeOffDetector():
         self.timer = util.DelayTimer(delay_time=self.delay)
 
     def detect(self, data: Type[hip_exo.Exo.DataContainer]):
-        filtered_angle = -1*self.angle_filter.filter(data.hip_angle)
+        filtered_angle = self.angle_filter.filter(data.hip_angle)
         self.angle_history.appendleft(filtered_angle)
         data.hip_angle_filtered = filtered_angle
         #print(self.angle_history)
