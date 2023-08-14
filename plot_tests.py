@@ -4,7 +4,7 @@ import config_util
 import filters
 
 # Read the CSV file and extract 'hip_angle' and 'gait_phase' columns
-filename = 'exo_data/20230814_1206_Wn 0.25 flex 10_LEFT.csv'
+filename = 'exo_data/20230814_1444_Wn 0.2 1.5mph walk_LEFT.csv'
 df = pd.read_csv(filename)
 
 # Create a figure with two subplots stacked vertically
