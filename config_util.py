@@ -43,7 +43,7 @@ class ConfigurableConstants():
     # Gait State details
     HS_ANGLE_FILTER_N: int = 2
     HS_ANGLE_FILTER_WN: float = 0.25
-    HS_ANGLE_DELAY: float = 0.05
+    HS_ANGLE_DELAY: float = 0.52
     TOE_OFF_FRACTION: float = 0.60
     HEEL_STRIKE_FRACTION: float = 0.40
     NUM_STRIDES_REQUIRED: int = 2
@@ -63,13 +63,13 @@ class ConfigurableConstants():
     PEAK_FRACTION: float = 0.66
     SECOND_ZERO: float = 0.90
 
-    START_TORQUE: float = -1.5
-    FLEXION_MAX_TORQUE: float = 2.5
-    EXTENSION_MIN_TORQUE: float = -4.0
+    #START_TORQUE: float = -1.5
+    #FLEXION_MAX_TORQUE: float = 2.5
+    #EXTENSION_MIN_TORQUE: float = -4.0
 
-    #START_TORQUE: float = -6
-    #FLEXION_MAX_TORQUE: float = 10
-    #EXTENSION_MIN_TORQUE: float = -16
+    START_TORQUE: float = -3
+    FLEXION_MAX_TORQUE: float = 5
+    EXTENSION_MIN_TORQUE: float = -8
 
     # Impedance
     K_VAL: int = 500
