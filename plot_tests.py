@@ -5,11 +5,12 @@ import filters
 
 # Read the CSV file and extract 'hip_angle' and 'gait_phase' columns
 #filename = 'C:/Users/ft700/Documents/Shepherd Lab/Hip Exo Code/Exoboot_Code/HipExo/exo_data/20230718_1732_extended walking 2_LEFT.csv'
-filename = 'exo_data/20230810_1631_flex 5 test angle filter_LEFT.csv'
+filename = 'exo_data/20230809_1703_N 2 Wn 0.25_LEFT.csv'
 df = pd.read_csv(filename)
 
 # Create a figure with two subplots stacked vertically
-fig, (ax1, ax2, ax3, ax4, ax5) = plt.subplots(5, 1, figsize=(10, 6), sharex=True)
+#fig, (ax1, ax2, ax3, ax4, ax5) = plt.subplots(5, 1, figsize=(10, 6), sharex=True)
+fig, (ax1) = plt.subplots(1, 1, figsize=(10, 6), sharex=True)
 
 # Plot 'hip_angle' on the first subplot
 ax1.plot(df.loop_time, df.hip_angle, color='blue')
@@ -25,7 +26,7 @@ for index in true_indices:
 
 ax1.legend()
 
-# Plot 'gait_phase' on the second subplot
+'''# Plot 'gait_phase' on the second subplot
 ax2.plot(df.loop_time, df.gait_phase, color='green')
 ax2.set_ylabel('Gait Phase')
 ax2.set_xlabel('Time')
@@ -50,7 +51,7 @@ time_diff = df.loop_time.diff()
 ax5.plot(df.loop_time, time_diff, color='magenta')
 ax5.set_ylabel('Time Difference')
 ax5.set_xlabel('Time')
-ax5.grid(True)
+ax5.grid(True)'''
 
 # Adjust layout to prevent overlapping
 plt.tight_layout()

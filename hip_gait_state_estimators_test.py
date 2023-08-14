@@ -38,9 +38,10 @@ class HipTestGaitEventDetectors(unittest.TestCase):
         #df = pd.read_csv('C:/Users/ft700/Documents/Shepherd Lab/Hip Exo Code/Exoboot_Code/HipExo/exo_data/20230718_1732_extended walking 2_LEFT.csv')
         #df = pd.read_csv('C:/Users/ft700/Documents/Shepherd Lab/Hip Exo Code/Exoboot_Code/HipExo/exo_data/20230719_1532_walking motor signs flipped_LEFT.csv')
         #df = pd.read_csv('C:/Users/ft700/Documents/Shepherd Lab/Hip Exo Code/Exoboot_Code/HipExo/exo_data/20230719_1650_walking test 4_LEFT.csv')
-        filename = 'exo_data/20230810_1340_flex torque 10 test filter_LEFT.csv'
+        filename = 'exo_data/20230813_1806_flex 10 4_LEFT.csv'
         df = pd.read_csv(filename)
         angle_values = df['hip_angle'].tolist()
+        filtered_angle_values = df['hip_angle_filtered'].tolist()
 
         hip_toe_off_detector = hip_gait_state_estimators.HipToeOffDetector(
             maximum_angle=-3, angle_filter=filters.Butterworth(N=2, Wn=0.1))
@@ -57,6 +58,7 @@ class HipTestGaitEventDetectors(unittest.TestCase):
         gait_phases = []
         did_toe_offs = []
         filtered_angles = []
+        filtered_angles2 = []
 
         # Create a Butterworth filter object
         butterworth_filter = filters.Butterworth(N=2, Wn=0.1)
@@ -69,11 +71,16 @@ class HipTestGaitEventDetectors(unittest.TestCase):
             did_heel_strikes.append(data.did_heel_strike)
             filtered_angles.append(-1*butterworth_filter.filter(data.hip_angle))
             time.sleep(0.005)
+
+        for filtered_angle in filtered_angle_values:
+            data.hip_angle_filtered = filtered_angle
+            filtered_angles2.append(data.hip_angle_filtered)
+        
         #print('gait phases: ',gait_phases)
         plt.plot(did_toe_offs, label='toe off')
         plt.plot(did_heel_strikes, label='heel strike')
         plt.plot(gait_phases, label='gait phase', linestyle='--')
-        #plt.plot(angle_values, label='angle')
+        plt.plot(filtered_angles2, label='filtered angles from data container')
         plt.plot(filtered_angles, label='filtered angles')
         plt.legend()
         plt.show()
