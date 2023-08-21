@@ -1,14 +1,12 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-import config_util
-import filters
 
 # Read the CSV file and extract 'hip_angle' and 'gait_phase' columns
-filename = 'exo_data/20230814_1643_WN 0.75 2_LEFT.csv'
+filename = 'exo_data/20230818_1210_false steps vs 1mph_LEFT.csv'
 df = pd.read_csv(filename)
 
 # Create a figure with two subplots stacked vertically
-fig, (ax1, ax2, ax3, ax4, ax5) = plt.subplots(5, 1, figsize=(10, 6), sharex=True)
+fig, (ax1, ax2, ax6, ax7, ax8, ax9, ax10, ax11) = plt.subplots(8, 1, figsize=(10, 6), sharex=True)
 #fig, (ax1) = plt.subplots(1, 1, figsize=(10, 6), sharex=True)
 
 # Plot 'hip_angle' on the first subplot
@@ -16,7 +14,7 @@ ax1.plot(df.loop_time, df.hip_angle, color='blue')
 ax1.plot(df.loop_time, df.hip_angle_filtered, color='orange')
 ax1.set_ylabel('Hip Angle')
 ax1.set_title('Hip Angle vs. Time')
-ax1.grid(True)  # Add gridlines to the first subplot
+ax1.grid(True)
 
 # Plot the true or false variable as a line whenever it's true
 true_indices = df.index[df['did_toe_off']]
@@ -31,7 +29,7 @@ ax2.set_ylabel('Gait Phase')
 ax2.set_xlabel('Time')
 ax2.grid(True)
 
-# Plot 'commanded_current' on the third subplot
+'''# Plot 'commanded_current' on the third subplot
 ax3.plot(df.loop_time, df.commanded_current, color='purple')
 ax3.set_ylabel('Commanded Current')
 ax3.set_xlabel('Time')
@@ -50,7 +48,43 @@ time_diff = df.loop_time.diff()
 ax5.plot(df.loop_time, time_diff, color='magenta')
 ax5.set_ylabel('Time Difference')
 ax5.set_xlabel('Time')
-ax5.grid(True)
+ax5.grid(True)'''
+
+# Plot the accel_x on the sixth subplot
+ax6.plot(df.loop_time, df.accel_x, color='red')
+ax6.set_ylabel('accel_x')
+ax6.set_xlabel('Time')
+ax6.grid(True)
+
+# Plot the accel_y on the sixth subplot
+ax7.plot(df.loop_time, df.accel_y, color='red')
+ax7.set_ylabel('accel_y')
+ax7.set_xlabel('Time')
+ax7.grid(True)
+
+# Plot the accel_z on the sixth subplot
+ax8.plot(df.loop_time, df.accel_z, color='red')
+ax8.set_ylabel('accel_z')
+ax8.set_xlabel('Time')
+ax8.grid(True)
+
+# Plot the gyro_x on the sixth subplot
+ax9.plot(df.loop_time, df.gyro_x, color='red')
+ax9.set_ylabel('gyro_x')
+ax9.set_xlabel('Time')
+ax9.grid(True)
+
+# Plot the gyro_y on the sixth subplot
+ax10.plot(df.loop_time, df.gyro_y, color='red')
+ax10.set_ylabel('gyro_y')
+ax10.set_xlabel('Time')
+ax10.grid(True)
+
+# Plot the gyro_z on the sixth subplot
+ax11.plot(df.loop_time, df.gyro_z, color='red')
+ax11.set_ylabel('gyro_z')
+ax11.set_xlabel('Time')
+ax11.grid(True)
 
 # Adjust layout to prevent overlapping
 plt.tight_layout()

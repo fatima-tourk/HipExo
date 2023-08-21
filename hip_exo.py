@@ -334,8 +334,6 @@ class Exo():
             self.my_file.close()
 
     def command_current(self, desired_mA: int):
-        '''Commands current (mA), with positive = DF on right, PF on left.
-        DIFFERENT FROM OLD BOOTS'''
         if abs(desired_mA) > self.max_allowable_current:
             self.command_controller_off()
             raise ValueError(
