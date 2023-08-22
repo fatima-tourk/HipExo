@@ -2,11 +2,11 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Read the CSV file and extract 'hip_angle' and 'gait_phase' columns
-filename = 'exo_data/20230818_1210_false steps vs 1mph_LEFT.csv'
+filename = 'exo_data/20230822_1321_timing1_LEFT.csv'
 df = pd.read_csv(filename)
 
 # Create a figure with two subplots stacked vertically
-fig, (ax1, ax2, ax6, ax7, ax8, ax9, ax10, ax11) = plt.subplots(8, 1, figsize=(10, 6), sharex=True)
+fig, (ax1, ax2, ax3, ax4, ax5) = plt.subplots(5, 1, figsize=(10, 6), sharex=True)
 #fig, (ax1) = plt.subplots(1, 1, figsize=(10, 6), sharex=True)
 
 # Plot 'hip_angle' on the first subplot
@@ -29,7 +29,7 @@ ax2.set_ylabel('Gait Phase')
 ax2.set_xlabel('Time')
 ax2.grid(True)
 
-'''# Plot 'commanded_current' on the third subplot
+# Plot 'commanded_current' on the third subplot
 ax3.plot(df.loop_time, df.commanded_current, color='purple')
 ax3.set_ylabel('Commanded Current')
 ax3.set_xlabel('Time')
@@ -48,9 +48,9 @@ time_diff = df.loop_time.diff()
 ax5.plot(df.loop_time, time_diff, color='magenta')
 ax5.set_ylabel('Time Difference')
 ax5.set_xlabel('Time')
-ax5.grid(True)'''
+ax5.grid(True)
 
-# Plot the accel_x on the sixth subplot
+'''# Plot the accel_x on the sixth subplot
 ax6.plot(df.loop_time, df.accel_x, color='red')
 ax6.set_ylabel('accel_x')
 ax6.set_xlabel('Time')
@@ -84,7 +84,7 @@ ax10.grid(True)
 ax11.plot(df.loop_time, df.gyro_z, color='red')
 ax11.set_ylabel('gyro_z')
 ax11.set_xlabel('Time')
-ax11.grid(True)
+ax11.grid(True)'''
 
 # Adjust layout to prevent overlapping
 plt.tight_layout()
