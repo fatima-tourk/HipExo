@@ -81,6 +81,21 @@ class ParameterPasser(threading.Thread):
                                   self.config.PEAK_TORQUE)
                     else:
                         print('Must provide single integer to update PEAK_TORQUE')
+                elif first_letter == 'f':
+                    if msg_content.isdigit():
+                        self.config.FLEXION_MAX_TORQUE = int(msg_content)
+                        print('max flexion torque updated to: ', msg_content)
+                    else:
+                        print('Must provide single positive integer to update max flexion torque')
+                elif first_letter == 't':
+                    param_list = [float(x) for x in msg_content.split(',')]
+                    if len(param_list) != 4:
+                        print('Must send four spline points with t<>! message')
+                    else:
+                        self.config.MIN_FRACTION = param_list[0]
+                        self.config.FIRST_ZERO = param_list[1]
+                        self.config.PEAK_FRACTION = param_list[2]
+                        self.config.SECOND_ZERO = param_list[3]
                 elif first_letter == '-':
                     self.config.EXPERIMENTER_NOTES = msg_content
                     print('Added that message to the config.')
