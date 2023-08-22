@@ -93,9 +93,13 @@ class ParameterPasser(threading.Thread):
                     if len(param_list) != 4:
                         print('Must send four spline points with t<>! message')
                     else:
-                        self.config.MIN_FRACTION = param_list[0]
+                        '''self.config.MIN_FRACTION = param_list[0]
                         self.config.FIRST_ZERO = param_list[1]
                         self.config.PEAK_FRACTION = param_list[2]
+                        self.config.SECOND_ZERO = param_list[3]'''
+                        self.config.PEAK_FRACTION = param_list[0]
+                        self.config.FIRST_ZERO = param_list[1]
+                        self.config.MIN_FRACTION = param_list[2]
                         self.config.SECOND_ZERO = param_list[3]
                 elif first_letter == '-':
                     self.config.EXPERIMENTER_NOTES = msg_content
