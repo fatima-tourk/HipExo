@@ -88,6 +88,12 @@ class ParameterPasser(threading.Thread):
                         print('max flexion torque updated to: ', msg_content)
                     else:
                         print('Must provide single positive integer to update max flexion torque')
+                elif first_letter == 'e':
+                    if msg_content.isdigit():
+                        self.config.EXTENSION_MIN_TORQUE = -1*int(msg_content)
+                        print('min extension torque updated to: -', msg_content)
+                    else:
+                        print('Must provide single positive integer to update min extension torque')
                 elif first_letter == 't':
                     param_list = [float(x) for x in msg_content.split(',')]
                     if len(param_list) != 4:

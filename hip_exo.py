@@ -441,7 +441,7 @@ class Exo():
     def _hip_torque_to_motor_current(self, torque: float) -> int:
         '''Converts torque (Nm) to current (mA), based on side and transmission ratio (no dynamics)'''
         motor_torque = torque / self.TR
-        motor_current = int(-1*self.motor_sign*
+        motor_current = int(self.motor_sign*
             motor_torque / constants.MOTOR_CURRENT_TO_MOTOR_TORQUE)
         return motor_current
 
