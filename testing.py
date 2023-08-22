@@ -51,9 +51,9 @@ timer = util.FlexibleTimer(
     target_freq=constants.TARGET_FREQ)  # attempts constants freq
 print(constants.TARGET_FREQ)
 t0 = time.perf_counter()
-'''keyboard_thread = parameter_passers.ParameterPasser(
+keyboard_thread = parameter_passers.ParameterPasser(
     lock=lock, config=config, quit_event=quit_event,
-    new_params_event=new_params_event)'''
+    new_params_event=new_params_event)
 config_saver.write_data(loop_time=0)  # Write first row on config
 
 while True:
@@ -77,8 +77,8 @@ while True:
             # Read exo data
             exo.read_data(loop_time=loop_time)
             hip_angle = exo.motor_angle_to_hip_angle(config=config)
-            print('hip angle', exo.data.hip_angle)
-            print('filtered angle', exo.data.hip_angle_filtered)
+            #print('hip angle', exo.data.hip_angle)
+            #print('filtered angle', exo.data.hip_angle_filtered)
         
         
         for gait_state_estimator in gait_state_estimator_list:
