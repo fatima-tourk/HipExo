@@ -2,11 +2,11 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Read the CSV file and extract 'hip_angle' and 'gait_phase' columns
-filename = 'exo_data/20230822_1321_timing1_LEFT.csv'
+filename = 'exo_data/20230823_1112__LEFT.csv'
 df = pd.read_csv(filename)
 
 # Create a figure with two subplots stacked vertically
-fig, (ax1, ax2, ax3, ax4, ax5) = plt.subplots(5, 1, figsize=(10, 6), sharex=True)
+fig, (ax1, ax2, ax4, ax5) = plt.subplots(4, 1, figsize=(10, 6), sharex=True)
 #fig, (ax1) = plt.subplots(1, 1, figsize=(10, 6), sharex=True)
 
 # Plot 'hip_angle' on the first subplot
@@ -20,6 +20,7 @@ ax1.grid(True)
 true_indices = df.index[df['did_toe_off']]
 for index in true_indices:
     ax1.axvline(x=df.loc[index, 'loop_time'], color='green', linestyle='dashed', alpha=0.5)
+    ax4.axvline(x=df.loc[index, 'loop_time'], color='green', linestyle='dashed', alpha=0.5)
 
 ax1.legend()
 
@@ -29,11 +30,11 @@ ax2.set_ylabel('Gait Phase')
 ax2.set_xlabel('Time')
 ax2.grid(True)
 
-# Plot 'commanded_current' on the third subplot
+'''# Plot 'commanded_current' on the third subplot
 ax3.plot(df.loop_time, df.commanded_current, color='purple')
 ax3.set_ylabel('Commanded Current')
 ax3.set_xlabel('Time')
-ax3.grid(True)
+ax3.grid(True)'''
 
 # Plot 'commanded_torque' on the fourth subplot
 ax4.plot(df.loop_time, df.commanded_torque, color='red')
