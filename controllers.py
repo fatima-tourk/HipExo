@@ -263,7 +263,7 @@ class HipSplineController(GenericSplineController):
                                                           extension_min_torque=config.EXTENSION_MIN_TORQUE,
                                                           flexion_max_torque=config.FLEXION_MAX_TORQUE))
 
-    def _get_spline_x(self, min_fraction, first_zero, peak_fraction, second_zero) -> list:
+    def _get_spline_x(self, first_zero, peak_fraction, second_zero, min_scaled_start, min_scaled_end) -> list:
         if self.peak_hold_time > 0:
             #return [0, min_fraction, min_fraction+self.peak_hold_time, first_zero, peak_fraction, peak_fraction+self.peak_hold_time, second_zero, 1]
             return [0, peak_fraction, peak_fraction+self.peak_hold_time, first_zero, min_fraction, min_fraction+self.peak_hold_time, second_zero, 1]
