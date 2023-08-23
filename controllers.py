@@ -268,6 +268,14 @@ class HipSplineController(GenericSplineController):
         else:
             #return [0, min_fraction, first_zero, peak_fraction, second_zero, 1]
             return [0, peak_fraction, first_zero, min_fraction, second_zero, 1]
+        
+    def _get_spline_y(self, start_torque, extension_min_torque, flexion_max_torque) -> list:
+        if self.peak_hold_time > 0:
+            #return [start_torque, extension_min_torque, extension_min_torque, self.bias_torque, flexion_max_torque, flexion_max_torque, self.bias_torque, start_torque]
+            return [start_torque, flexion_max_torque, flexion_max_torque, self.bias_torque, extension_min_torque, extension_min_torque, self.bias_torque, start_torque]
+        else:
+            #return [start_torque, extension_min_torque, self.bias_torque, flexion_max_torque, self.bias_torque, start_torque]
+            return [start_torque, flexion_max_torque, self.bias_torque, extension_min_torque, self.bias_torque, start_torque]
 
 class GenericImpedanceController(Controller):
     def __init__(self,

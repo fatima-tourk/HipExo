@@ -96,18 +96,13 @@ class ParameterPasser(threading.Thread):
                         print('Must provide single positive integer to update min extension torque')
                 elif first_letter == 't':
                     param_list = [float(x) for x in msg_content.split(',')]
-                    if len(param_list) != 5:
-                        print('Must send five spline points with t<>! message')
+                    if len(param_list) != 4:
+                        print('Must send four spline points with t<>! message')
                     else:
-                        '''self.config.MIN_FRACTION = param_list[0]
+                        self.config.MIN_FRACTION = param_list[2]
                         self.config.FIRST_ZERO = param_list[1]
-                        self.config.PEAK_FRACTION = param_list[2]
-                        self.config.SECOND_ZERO = param_list[3]'''
-                        self.config.MIN_SCALED_START = param_list[0]
-                        self.config.FIRST_ZERO = param_list[1]
-                        self.config.PEAK_FRACTION = param_list[2]
+                        self.config.PEAK_FRACTION = param_list[0]
                         self.config.SECOND_ZERO = param_list[3]
-                        self.config.MIN_SCALED_END = param_list[4]
 
                 elif first_letter == '-':
                     self.config.EXPERIMENTER_NOTES = msg_content
