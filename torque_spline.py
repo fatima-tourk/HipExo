@@ -19,7 +19,7 @@ extension_min = -0.4
 zero = 0
 flexion_peak = 0.25
 #spline_y = [start, extension_min, zero, flexion_peak, zero, start]
-spline_y = [extension_min, 0.9*extension_min, 0, flexion_peak, 0, 0.9*extension_min, extension_min]
+spline_y = [0, flexion_peak, 0, 0.9*extension_min, extension_min, 0.9*extension_min,0]
 spline = interpolate.pchip(spline_x, spline_y, extrapolate=False)
 
 # Evaluate the spline over a range of x-values
