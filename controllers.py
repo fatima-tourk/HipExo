@@ -129,10 +129,12 @@ class GenericSplineController(Controller):
         # Fade timer goes from 0 to fade_duration, active if below fade_duration (starts inactive)
         self.fade_start_time = time.perf_counter()-100
         self.t0 = None
+        self.startup_timer = None
         self.torque_history = deque([0, 0, 0, 0, 0, 0, 0, 0, 0, 0], maxlen=10)
 
     def command(self, reset=False):
         '''Commands appropriate control. If reset=True, this controller was just switched to.'''
+        
         if reset:
             super().command_gains()
             self.t0 = time.perf_counter()
@@ -143,7 +145,8 @@ class GenericSplineController(Controller):
             phase = time.perf_counter()-self.t0
 
         if all(x == 0 for x in self.torque_history):
-           startup_timer = time.perf_counter()
+           self.startup_timer = time.perf_counter()
+
         if phase is None:
             # Gait phase is sometimes None
             desired_torque = 0
@@ -156,9 +159,9 @@ class GenericSplineController(Controller):
             desired_torque = self.fade_splines(
                 phase=phase, fraction=(time.perf_counter()-self.fade_start_time)/self.fade_duration)
             print('fading splines')    
-        elif (time.perf_counter() - startup_timer) < 2:
-            desired_torque = self.start_spline_gently(phase=phase, fraction=((time.perf_counter() - startup_timer)/2))
-            print('fraction: ', (time.perf_counter() - startup_timer)/2)
+        elif (time.perf_counter() - self.startup_timer) < 2:
+            desired_torque = self.start_spline_gently(phase=phase, fraction=((time.perf_counter() - self.startup_timer)/2))
+            print('fraction: ', (time.perf_counter() - self.startup_timer)/2)
             print('torque: ', desired_torque)
             print('Starting spline up gently')
         else:
