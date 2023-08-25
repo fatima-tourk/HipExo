@@ -156,9 +156,9 @@ class GenericSplineController(Controller):
             desired_torque = self.fade_splines(
                 phase=phase, fraction=(time.perf_counter()-self.fade_start_time)/self.fade_duration)
             print('fading splines')    
-        elif startup_timer < 2:
-            desired_torque = self.start_spline_gently(phase=phase, fraction=(startup_timer/2))
-            print('fraction: ', startup_timer)
+        elif (time.perf_counter() - startup_timer) < 2:
+            desired_torque = self.start_spline_gently(phase=phase, fraction=((time.perf_counter() - startup_timer)/2))
+            print('fraction: ', (time.perf_counter() - startup_timer)/2)
             print('torque: ', desired_torque)
             print('Starting spline up gently')
         else:
