@@ -129,6 +129,7 @@ class GenericSplineController(Controller):
         # Fade timer goes from 0 to fade_duration, active if below fade_duration (starts inactive)
         self.fade_start_time = time.perf_counter()-100
         self.t0 = None
+        self.torque_history = deque([0, 0, 0, 0, 0, 0, 0, 0, 0, 0], maxlen=10)
 
     def command(self, reset=False):
         '''Commands appropriate control. If reset=True, this controller was just switched to.'''
@@ -141,10 +142,11 @@ class GenericSplineController(Controller):
         else:
             phase = time.perf_counter()-self.t0
 
+        if all(x == 0 for x in self.torque_history):
+           startup_timer = time.perf_counter()
         if phase is None:
             # Gait phase is sometimes None
             desired_torque = 0
-            #print('phase is None')
         elif phase > self.spline_x[-1]:
             # If phase (elapsed time) is longer than spline is specified, use last spline point
             print('phase is longer than specified spline')
@@ -153,10 +155,15 @@ class GenericSplineController(Controller):
             # If fading splines
             desired_torque = self.fade_splines(
                 phase=phase, fraction=(time.perf_counter()-self.fade_start_time)/self.fade_duration)
-            print('fading splines')
+            print('fading splines')    
+        elif startup_timer < 2:
+            desired_torque = self.start_spline_gently(phase=phase, fraction=(startup_timer/2))
+            print('fraction: ', startup_timer)
+            print('torque: ', desired_torque)
+            print('Starting spline up gently')
         else:
             desired_torque = self.spline(phase)
-            #print('desired torque', desired_torque)
+        self.torque_history.appendleft(desired_torque)
         self.exo.command_torque(desired_torque)
 
     def update_spline(self, spline_x, spline_y, first_call=False):
@@ -174,6 +181,11 @@ class GenericSplineController(Controller):
         torque_from_current_spline = self.spline(phase)
         desired_torque = (1-fraction)*torque_from_last_spline + \
             fraction*torque_from_current_spline
+        return desired_torque
+    
+    def start_spline_gently(self, phase, fraction):
+        torque_from_current_spline = self.spline(phase)
+        desired_torque = fraction*torque_from_current_spline
         return desired_torque
 
 
@@ -263,18 +275,14 @@ class HipSplineController(GenericSplineController):
 
     def _get_spline_x(self, min_fraction, first_zero, peak_fraction, second_zero) -> list:
         if self.peak_hold_time > 0:
-            #return [0, min_fraction, min_fraction+self.peak_hold_time, first_zero, peak_fraction, peak_fraction+self.peak_hold_time, second_zero, 1]
             return [0, peak_fraction, peak_fraction+self.peak_hold_time, first_zero, min_fraction, min_fraction+self.peak_hold_time, second_zero, 1]
         else:
-            #return [0, min_fraction, first_zero, peak_fraction, second_zero, 1]
             return [0, peak_fraction, first_zero, min_fraction, second_zero, 1]
         
     def _get_spline_y(self, start_torque, extension_min_torque, flexion_max_torque) -> list:
         if self.peak_hold_time > 0:
-            #return [start_torque, extension_min_torque, extension_min_torque, self.bias_torque, flexion_max_torque, flexion_max_torque, self.bias_torque, start_torque]
             return [start_torque, flexion_max_torque, flexion_max_torque, self.bias_torque, extension_min_torque, extension_min_torque, self.bias_torque, start_torque]
         else:
-            #return [start_torque, extension_min_torque, self.bias_torque, flexion_max_torque, self.bias_torque, start_torque]
             return [start_torque, flexion_max_torque, self.bias_torque, extension_min_torque, self.bias_torque, start_torque]
 
 class GenericImpedanceController(Controller):

@@ -28,7 +28,6 @@ class ParameterPasser(threading.Thread):
     def run(self):
         while True:
             msg = input()
-            print(msg)
             if msg == 'a':
                 self.lock.acquire()
                 self.new_params_event.set()
