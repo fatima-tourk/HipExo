@@ -82,17 +82,34 @@ class ParameterPasser(threading.Thread):
                     else:
                         print('Must provide single integer to update PEAK_TORQUE')
                 elif first_letter == 'f':
+                    param_list = [float(x) for x in msg_content.split(',')]
                     if msg_content.isdigit():
                         self.config.FLEXION_MAX_TORQUE = int(msg_content)
                         print('max flexion torque updated to: ', msg_content)
+                    elif len(param_list) == 2:
+                        self.config.FLEXION_MAX_TORQUE = param_list[0]
+
                     else:
-                        print('Must provide single positive integer to update max flexion torque')
+                        print('Must provide single positive integer OR magnitude and timing to update max flexion torque')
                 elif first_letter == 'e':
+                    param_list = [float(x) for x in msg_content.split(',')]
                     if msg_content.isdigit():
                         self.config.EXTENSION_MIN_TORQUE = -1*int(msg_content)
                         print('min extension torque updated to: -', msg_content)
+                    elif len(param_list) == 2:
+                        self.config.EXTENSION_MIN_TORQUE = -1*param_list[0]
+                        self.config.MIN_FRACTION = param_list[1]
                     else:
-                        print('Must provide single positive integer to update min extension torque')
+                        print('Must provide single positive integer OR magnitude and timing to update min extension torque')
+                elif first_letter == 'c':
+                    param_list = [float(x) for x in msg_content.split(',')]
+                    if len(param_list) != 4:
+                        print('Must send four spline points with t<>! message')
+                    else:
+                        self.config.FLEXION_MAX_TORQUE = param_list[0]
+                        self.config.PEAK_FRACTION = param_list[1]
+                        self.config.EXTENSION_MIN_TORQUE = -1*param_list[2]
+                        self.config.MIN_FRACTION = param_list[3]
                 elif first_letter == 't':
                     param_list = [float(x) for x in msg_content.split(',')]
                     if len(param_list) != 4:
