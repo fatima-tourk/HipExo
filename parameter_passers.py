@@ -88,7 +88,7 @@ class ParameterPasser(threading.Thread):
                         print('max flexion torque updated to: ', msg_content)
                     elif len(param_list) == 2:
                         self.config.FLEXION_MAX_TORQUE = param_list[0]
-
+                        self.config.PEAK_FRACTION = param_list[1]
                     else:
                         print('Must provide single positive integer OR magnitude and timing to update max flexion torque')
                 elif first_letter == 'e':
