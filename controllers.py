@@ -130,7 +130,7 @@ class GenericSplineController(Controller):
         self.fade_start_time = time.perf_counter()-100
         self.t0 = None
         self.startup_timer = None
-        self.torque_history = deque([0, 0, 0, 0, 0, 0, 0, 0, 0, 0], maxlen=10)
+        self.torque_history = deque([0] * 50, maxlen=50)
 
     def command(self, reset=False):
         '''Commands appropriate control. If reset=True, this controller was just switched to.'''
