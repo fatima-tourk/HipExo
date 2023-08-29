@@ -261,7 +261,7 @@ class HipSplineController(GenericSplineController):
         self.bias_torque = bias_torque
         super().__init__(exo=exo,
                          spline_x=self._get_spline_x(
-                             peak_fraction, first_zero,second_zero, min_scaled_start, min_scaled_end),
+                              min_scaled_start, first_zero, peak_fraction, second_zero, min_scaled_end),
                          spline_y=self._get_spline_y(start_torque, extension_min_torque, flexion_max_torque),
                          Kp=Kp, Ki=Ki, Kd=Kd, ff=ff,
                          fade_duration=fade_duration,
@@ -269,10 +269,10 @@ class HipSplineController(GenericSplineController):
 
     def update_ctrl_params_from_config(self, config: Type[config_util.ConfigurableConstants]):
         'Updates controller parameters from the config object.'''
-        super().update_spline(spline_x=self._get_spline_x(peak_fraction=config.PEAK_FRACTION,
+        super().update_spline(spline_x=self._get_spline_x(min_scaled_start = config.MIN_SCALED_START,
                                                           first_zero=config.FIRST_ZERO,
+                                                          peak_fraction=config.PEAK_FRACTION,
                                                           second_zero=config.SECOND_ZERO, 
-                                                          min_scaled_start = config.MIN_SCALED_START,
                                                           min_scaled_end = config.MIN_SCALED_END),
                               spline_y=self._get_spline_y(start_torque=config.START_TORQUE,
                                                           extension_min_torque=config.EXTENSION_MIN_TORQUE,

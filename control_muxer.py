@@ -35,7 +35,7 @@ def get_gse_and_sm_lists(exo_list, config: Type[config_util.ConfigurableConstant
 
             # Define State Machine
             phase_controller = controllers.HipSplineController(
-                exo=exo,  first_zero=config.FIRST_ZERO, peak_fraction=config.PEAK_FRACTION, min_fraction= config.MIN_FRACTION,
+                exo=exo,  first_zero=config.FIRST_ZERO, peak_fraction=config.PEAK_FRACTION, min_scaled_end=config.MIN_SCALED_END, min_scaled_start = config.MIN_SCALED_START,
                 second_zero=config.SECOND_ZERO, start_torque=config.START_TORQUE, extension_min_torque=config.EXTENSION_MIN_TORQUE,
                 flexion_max_torque=config.FLEXION_MAX_TORQUE)
             state_machine = state_machines.OneStateMachine(exo=exo, phase_controller=phase_controller)
