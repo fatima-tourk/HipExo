@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Read the CSV file and extract 'hip_angle' and 'gait_phase' columns
-filename = 'exo_data/20230825_1238_new parameters passers 2_LEFT.csv'
+filename = 'exo_data/20230829_1335_all speeds angles no torque_LEFT.csv'
 df = pd.read_csv(filename)
 
 # Create a figure with two subplots stacked vertically

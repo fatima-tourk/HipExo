@@ -127,7 +127,7 @@ class Exo():
         self.hip_velocity_filter = filters.Butterworth(
             N=2, Wn=10, fs=target_freq)
         self.angle_filter = filters.Butterworth(
-            N=2, Wn=0.1, fs=target_freq)
+            N=2, Wn=2, fs=target_freq)
 
         self.data = self.DataContainer(
             do_include_gen_vars=do_include_gen_vars, do_include_sync=self.do_include_sync)
@@ -344,6 +344,12 @@ class Exo():
         self.data.commanded_current = desired_mA
         self.data.commanded_position = None
         self.data.commanded_voltage = None
+    
+    def run_angle_safety(self, hip_angle: float):
+        if (hip_angle > constants.MAX_HIP_ANGLE) or (hip_angle < constants.MIN_HIP_ANGLE):
+            self.command_controller_off()
+            raise ValueError(
+                'Hip angle outside of acceptable range')
 
     def command_voltage(self, desired_mV: int):
         '''Commands voltage (mV), with positive = DF on right, PF on left.
