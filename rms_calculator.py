@@ -18,7 +18,7 @@ def calculate_rms_current(spline_x, spline_y):
 
 # Example spline x and y values
 spline_x = [0, 0.12, 0.4, 0.75, 0.9, 1]
-spline_y = [0, 8, 0, -15, 0, 0]
+spline_y = [0, 14, 0, -10, 0, 0]
 
 rms_current = calculate_rms_current(spline_x, spline_y)
 print("RMS Current:", rms_current)
