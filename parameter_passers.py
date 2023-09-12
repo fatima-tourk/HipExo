@@ -84,7 +84,7 @@ class ParameterPasser(threading.Thread):
                 elif first_letter == 'f':
                     param_list = [float(x) for x in msg_content.split(',')]
                     if msg_content.isdigit():
-                        self.config.FLEXION_MAX_TORQUE = int(msg_content)
+                        self.config.FLEXION_MAX_TORQUE = float(msg_content)
                         print('max flexion torque updated to: ', msg_content)
                     elif len(param_list) == 2:
                         self.config.FLEXION_MAX_TORQUE = param_list[0]
@@ -94,7 +94,7 @@ class ParameterPasser(threading.Thread):
                 elif first_letter == 'e':
                     param_list = [float(x) for x in msg_content.split(',')]
                     if msg_content.isdigit():
-                        self.config.EXTENSION_MIN_TORQUE = -1*int(msg_content)
+                        self.config.EXTENSION_MIN_TORQUE = -1*float(msg_content)
                         print('min extension torque updated to: -', msg_content)
                     elif len(param_list) == 2:
                         self.config.EXTENSION_MIN_TORQUE = -1*param_list[0]
@@ -132,4 +132,4 @@ class ParameterPasser(threading.Thread):
                 self.lock.release()
 
             else:
-                print('IDK how to interpret your message')
+                print('I don\'t know how to interpret your message')

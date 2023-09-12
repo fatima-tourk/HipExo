@@ -57,16 +57,16 @@ class ConfigurableConstants():
     PEAK_TORQUE: float = 30
     SPLINE_BIAS: float = 3  # Nm
 
-    # Hip Spline
+    # Hip Spline og
     '''MIN_FRACTION: float = 0.12
     FIRST_ZERO: float = 0.37
     PEAK_FRACTION: float = 0.66
     SECOND_ZERO: float = 0.90'''
 
     # Hip Spline
-    PEAK_FRACTION: float = 0.12
-    FIRST_ZERO: float = 0.37
-    MIN_FRACTION: float = 0.66
+    PEAK_FRACTION: float = 0.3
+    FIRST_ZERO: float = 0.4
+    MIN_FRACTION: float = 0.7
     SECOND_ZERO: float = 0.90
 
     # Hip Spline end on min
