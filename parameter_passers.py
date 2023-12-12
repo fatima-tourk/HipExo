@@ -124,7 +124,20 @@ class ParameterPasser(threading.Thread):
                         self.config.PEAK_FRACTION = param_list[2]
                         self.config.SECOND_ZERO = param_list[3]
                         self.config.MIN_SCALED_END = param_list[4]'''
-
+                elif first_letter == 'u':
+                    param_list = [float(x) for x in msg_content.split(',')]
+                    if len(param_list) != 8:
+                        print('Must send four spline points with c<>! message')
+                    else:
+                        self.config.PEAK_FRACTION = param_list[0]
+                        self.config.FIRST_ZERO = param_list[1]
+                        self.config.MIN_FRACTION = param_list[2]
+                        self.config.SECOND_ZERO = param_list[3]
+                        self.config.FLEXION_MAX_TORQUE = param_list[4]
+                        self.config.PEAK_FRACTION = param_list[5]
+                        self.config.EXTENSION_MIN_TORQUE = -1*param_list[6]
+                        self.config.MIN_FRACTION = param_list[7]
+                        
                 elif first_letter == '-':
                     self.config.EXPERIMENTER_NOTES = msg_content
                     print('Added that message to the config.')
